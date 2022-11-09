@@ -2,16 +2,18 @@
 
 {% block content %}
   {% for i in "abcd" %}
-  <div class="card w-1/2 bg-base-100 shadow-2xl mx-auto mb-4">
-    <img src="https://placeimg.com/400/225/arch" alt="Shoes" />
-    <div class="card-body">
-      <h2 class="card-title">Hello My Friend</h2>
-      <small>02-10-2022</small>
-      <p>This is my recent post how are you doing?</p>
-      <div class="card-actions justify-end">
-        <button class="btn btn-outline btn-error"><i class="fa-regular fa-heart fa-lg"></i></button>
+    <a href="/post">
+      <div class="card w-1/2 bg-base-100 shadow-2xl mx-auto mb-4">
+        <img src="https://placeimg.com/400/225/arch" alt="Shoes" />
+        <div class="card-body">
+          <h2 class="card-title">Hello My Friend</h2>
+          <small>02-10-2022</small>
+          <p>This is my recent post how are you doing?</p>
+          <div class="card-actions justify-end">
+            <button class="btn btn-outline btn-error"><i class="fa-regular fa-heart fa-lg"></i></button>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    </a>
   {% endfor %}
 {% endblock %}
