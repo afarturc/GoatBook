@@ -1,7 +1,10 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
+user=get_user_model()
 
-class User(models.Model):
+class Utilizador (models.Model):
+    
     username = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
     email = models.EmailField(max_length=50)
@@ -12,11 +15,11 @@ class User(models.Model):
         return self.username
 
 class Post(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
     caption = models.CharField(max_length=100)
     image = models.ImageField(upload_to='post_pics', blank=True)
-    likes = models.ManyToManyField(User, related_name='likes', blank=True)
-    comments = models.ManyToManyField(User, related_name='comments', blank=True)
+    likes = models.ManyToManyField(Utilizador, related_name='likes', blank=True)
+    comments = models.ManyToManyField(Utilizador, related_name='comments', blank=True)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -26,7 +29,7 @@ class Post(models.Model):
         ordering = ['-date']
 
 class Like(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
 
@@ -37,7 +40,7 @@ class Like(models.Model):
         ordering = ['-date']
 
 class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.CharField(max_length=100)
     date = models.DateTimeField(auto_now_add=True)

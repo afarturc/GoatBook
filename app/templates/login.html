@@ -1,0 +1,46 @@
+{% extends "layout2.html" %}
+
+{% block content %}
+<div>
+    <div class="lg:p-12 max-w-md max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
+        <h1 class="lg:text-3xl text-xl font-semibold  mb-6"> Login </h1>
+
+        <div>
+            <style>
+                h5{
+                    color: red;
+                }
+            </style>
+            <h5>{{ messages }}</h5>
+
+        <form action="." method="POST">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="block text-black text-sm font-bold mb-2" for="username">Username</label>
+                <input class="border border-gray-400 p-2 w-full" type="text" name="username" id="username">
+            </div>
+            <div class="mb-4">
+                <label class="block text-black text-sm font-bold mb-2" for="password">Password</label>
+                <input class="border border-gray-400 p-2 w-full" type="password" name="password" id="password">
+            </div>
+            <div class="mb-4">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded to-red-400 w-full" type="submit">Login</button>
+            </div>
+            <div class="flex justify-between my-4 space-x-1">
+                <div>
+                    <input type="checkbox" id="chekcbox1" checked>
+                    <label for="chekcbox1">
+                        <span class="checkbox-icon"></span> <a href="#"> Remember Me</a></label>
+                </div>
+                <div>
+                    <a href="#">Forgot Password?</a>
+                </div>
+            </div>
+            <div class="text-center mt-5 space-x-2">
+                <p class="text-base"> Don't have an account? <a href= {% url 'signup'%}> Create a account</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
