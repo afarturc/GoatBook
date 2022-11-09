@@ -1,7 +1,12 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  {% for i in "abcd" %}
+<div class="container m-auto">
+  <div class="lg:flex justify-center lg:space-x-10 lg:space-y-0 space-y-5">
+
+<div class="space-y-5 flex-shrink-0 lg:w-7/12">
+{% for i in "abcd" %}
+  
     <a href="/post">
       <div class="card w-1/2 bg-base-100 shadow-2xl mx-auto mb-4">
         <img src="https://placeimg.com/400/225/arch" alt="Shoes" />
@@ -15,5 +20,35 @@
         </div>
       </div>
     </a>
+  
   {% endfor %}
+</div>
+  
+  <div class="lg:w-5/12">
+    <div class="bg-white  shadow-md rounded-md overflow-hidden">
+    <div class="bg-gray-50  border-b border-gray-100 flex items-baseline justify-between py-4 px-6 ">
+          <h2 class="font-semibold text-lg">Users You Can Follow</h2>
+          <a href="#"> Refresh</a>
+      </div>
+    {% for x in "abcd" %}
+      
+      <div class="divide-gray-300 divide-gray-50 divide-opacity-50 divide-y px-4 ">
+        <div class="flex items-center justify-between py-3">
+            <div class="flex flex-1 items-center space-x-4">
+                <a href="profile.html">
+                    <img src="https://placeimg.com/400/225/arch" alt="Shoes" class="bg-gray-200 rounded-full w-10 h-10">
+                </a>
+                <div class="flex flex-col">
+                    <span class="block capitalize font-semibold"> tomi_ml </span>
+                    <span class="block capitalize text-sm"> 320k followers </span>
+                </div>
+            </div>
+            <button class="btn btn-primary">Follow</button>
+        </div> 
+      </div> 
+        {% endfor %}
+      </div>
+  </div>
+</div>
+</div>
 {% endblock %}
