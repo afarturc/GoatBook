@@ -5,14 +5,17 @@ from app.models import Utilizador
 # Create your views here.
 
 def home(request):
-    return render(request, "home2.html")
+    if request.user.is_authenticated:
+        return render(request, "home.html")
+    else:
+        return render(request, "home2.html")
 
 def post(request):
     return render(request, "post.html")
 
 def logout(request):
-    logout(request)
-    return render(request, "logout.html")
+    auth.logout(request)
+    return redirect("home")
 
 def signup(request):
     if request.method == "POST":
@@ -49,7 +52,7 @@ def signup(request):
         #create user
         user = User.objects.create_user(username=username, password=password, email=email)
         auth.login(request, user)
-        return render(request, "home.html")
+        return redirect("home")
 
     else:
         return render(request, "signup.html", {"messages": ""})
@@ -68,7 +71,7 @@ def login(request):
         print(user)
         if user is not None:
             auth.login(request, user)
-            return render(request, "home.html")
+            return redirect("home")
         else:
             print("User does not exist")
             return render(request, "login.html", {"messages": "Invalid credentials."})
