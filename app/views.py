@@ -6,10 +6,10 @@ from app.models import Post, Utilizador
 
 def home(request):
     if request.user.is_authenticated:
+        new_users = Utilizador.objects.all()[:5]
         profile = Utilizador.objects.filter(username=request.user.username)
-        posts = Post.objects.all()
-        return render(request, "home.html", {"profile": profile, "posts": posts})
-        return render(request, "home.html")
+        posts = Post.objects.all().order_by("-date")
+        return render(request, "home.html", {"profile": profile, "posts": posts, "new_users": new_users})
     else:
         posts = Post.objects.all()
         print(posts)
@@ -83,16 +83,16 @@ def login(request):
     else:
         return render(request, "login.html", {"messages": ""})
 
+# Refazer
 def postadd(request):
     user = User.objects.get(username=request.user.username)
-    if user.is_authenticated:
-        print("User is authenticated")
+    if user.is_authenticated and request.user.username!="admin":
         utilizador = Utilizador.objects.get(username=request.user.username)
         if request.method == "POST":
             caption = request.POST["caption"]
-            image = request.FILES["image"]
+            image = request.FILES.get('image')
             Post.objects.create(user=utilizador, caption=caption, image=image)
-            return redirect("post.html")
+            return redirect("home")
         else:
             return render(request, "postadd.html", {"messages": ""})
     else:
