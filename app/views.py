@@ -29,32 +29,38 @@ def signup(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         email = request.POST["email"]
-        image = request.FILES["image"]
+        if request.FILES:
+            image = request.FILES["image"]
+        else:
+            image = None
 
         if User.objects.filter(username=username).exists():
-            print("Username already exists")
             return render(request, "signup.html", {"messages": "Username already exists."})
 
-        
-        if password != confirmation:
+        elif password != confirmation:
             return render(request, "signup.html", {"messages": "Passwords must match."})
 
-        if User.objects.filter(email=email).exists():
+        elif User.objects.filter(email=email).exists():
             print("Email already exists")
             return render(request, "signup.html", {"messages": "Email already exists."})
 
-        if Utilizador.objects.filter(username=username).exists():
+        elif Utilizador.objects.filter(username=username).exists():
             return render(request, "signup.html", {"messages": "Username already exists."})
 
-        if Utilizador.objects.filter(email=email).exists():
+        elif Utilizador.objects.filter(email=email).exists():
             return render(request, "signup.html", {"messages": "Email already exists."})
         
-
-        Utilizador.objects.create(username=username, password=password, email=email, profile_pic=image)
-        #create user
-        user = User.objects.create_user(username=username, password=password, email=email)
-        auth.login(request, user)
-        return redirect("home")
+        elif request.FILES:
+            Utilizador.objects.create(username=username, password=password, email=email, profile_pic=image)
+            user = User.objects.create_user(username=username, password=password, email=email)
+            auth.login(request, user)
+            return redirect("home")
+        else:
+            Utilizador.objects.create(username=username, password=password, email=email)
+            #create user
+            user = User.objects.create_user(username=username, password=password, email=email)
+            auth.login(request, user)
+            return redirect("home")
 
     else:
         return render(request, "signup.html", {"messages": ""})
@@ -101,3 +107,14 @@ def postadd(request):
                 return render(request, "postadd.html", {"form": form, "user": utilizador})
     else:
         return redirect("login")
+
+
+def profile(request, username):
+    if request.user.is_authenticated:
+        profile = Utilizador.objects.filter(username=username)
+        posts = Post.objects.filter(user=profile[0])
+        return render(request, "profile.html", {"profile": profile, "posts": posts})
+    else:
+        return redirect("login")
+
+

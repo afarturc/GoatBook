@@ -4,8 +4,8 @@
 [x]criar nova conta
 []pagina perfil
 []editar perfil
-[]adicionar post 
-[]editar post
+[x]adicionar post 
+[]editar post 
 []remover post
 []adicionar comment
 []remover comment
@@ -13,5 +13,3 @@
 []remover like
 []search por utilizador
 []search por post
-
-[]Home (alterar depois)
