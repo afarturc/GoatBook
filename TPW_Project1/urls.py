@@ -32,4 +32,6 @@ urlpatterns = [
     path("login/", views.login, name="login"),
 
     path("postadd/", views.postadd, name="postadd"),
-]
+    #path("post/<int:post_id>/", views.postdetail, name="postdetail"),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

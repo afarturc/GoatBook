@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
 from app.models import Post, Utilizador
+from app.forms import PostForm
 
 # Create your views here.
 
@@ -28,17 +29,13 @@ def signup(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         email = request.POST["email"]
-        if "image" in request.FILES:
-            image = request.FILES["image"]
-        else:
-            image = None
+        image = request.FILES["image"]
 
         if User.objects.filter(username=username).exists():
             print("Username already exists")
             return render(request, "signup.html", {"messages": "Username already exists."})
 
         
-            
         if password != confirmation:
             return render(request, "signup.html", {"messages": "Passwords must match."})
 
@@ -83,17 +80,24 @@ def login(request):
     else:
         return render(request, "login.html", {"messages": ""})
 
-# Refazer
+#Refazer
 def postadd(request):
     user = User.objects.get(username=request.user.username)
     if user.is_authenticated and request.user.username!="admin":
         utilizador = Utilizador.objects.get(username=request.user.username)
         if request.method == "POST":
-            caption = request.POST["caption"]
-            image = request.FILES.get('image')
-            Post.objects.create(user=utilizador, caption=caption, image=image)
-            return redirect("home")
+            print("POST")
+            form = PostForm(request.POST, request.FILES)
+            if form.is_valid():
+                image = request.FILES["image"]
+                caption = request.POST["caption"]
+
+                if caption and image:
+                    Post.objects.create(user=utilizador, image=image, caption=caption)
+                    return redirect("home")
+
         else:
-            return render(request, "postadd.html", {"messages": ""})
+                form=PostForm()
+                return render(request, "postadd.html", {"form": form, "user": utilizador})
     else:
         return redirect("login")
