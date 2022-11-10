@@ -1,14 +1,19 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
-from app.models import Utilizador
+from app.models import Post, Utilizador
 
 # Create your views here.
 
 def home(request):
     if request.user.is_authenticated:
+        profile = Utilizador.objects.filter(username=request.user.username)
+        posts = Post.objects.all()
+        return render(request, "home.html", {"profile": profile, "posts": posts})
         return render(request, "home.html")
     else:
-        return render(request, "home2.html")
+        posts = Post.objects.all()
+        print(posts)
+        return render(request, "home2.html", {"posts": posts})
 
 def post(request):
     return render(request, "post.html")
@@ -78,3 +83,17 @@ def login(request):
     else:
         return render(request, "login.html", {"messages": ""})
 
+def postadd(request):
+    user = User.objects.get(username=request.user.username)
+    if user.is_authenticated:
+        print("User is authenticated")
+        utilizador = Utilizador.objects.get(username=request.user.username)
+        if request.method == "POST":
+            caption = request.POST["caption"]
+            image = request.FILES["image"]
+            Post.objects.create(user=utilizador, caption=caption, image=image)
+            return redirect("post.html")
+        else:
+            return render(request, "postadd.html", {"messages": ""})
+    else:
+        return redirect("login")

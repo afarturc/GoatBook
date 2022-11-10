@@ -5,15 +5,14 @@
   <div class="lg:flex justify-center lg:space-x-10 lg:space-y-0 space-y-5">
 
 <div class="space-y-5 flex-shrink-0 lg:w-7/12">
-{% for i in "abcd" %}
+{% for post in posts %}
   
     <a href="/post">
       <div class="card w-1/2 bg-base-100 shadow-2xl mx-auto mb-4">
-        <img src="https://placeimg.com/400/225/arch" alt="Shoes" />
+        <img src="{{ post.image.url }}"/>
         <div class="card-body">
-          <h2 class="card-title">Hello My Friend</h2>
-          <small>02-10-2022</small>
-          <p>This is my recent post how are you doing?</p>
+          <small>{{post.date}}</small>
+          <p>{{post.caption}}</p>
           <div class="card-actions justify-end">
             <button class="btn btn-outline btn-error"><i class="fa-regular fa-heart fa-lg"></i></button>
           </div>
