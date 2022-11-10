@@ -12,10 +12,19 @@
 <div class="overflow-x-auto w-full">
     <div class="w-full flex flex-col">
         <div class="flex space-x-3 items-center space-y-5">
-
-            <button class="btn btn-primary"><a href="/post/{{ post.id }}/comment">Comentar </a></button>
-
+            <div class="mask mask-squircle w-32">
+                <img src="{{user.profile_pic.url }}" alt="Profile Picture" />
+            </div>
+            <div class="w-28">
+                <div class="font-bold">Hart Hagerty</div>
+            </div>
             
+            <form action="." method="POST">
+                {% csrf_token %}
+                <div class="form-control">
+                    <input type="text" name="comment" id="comment" placeholder="Comentário" class="input w-full" />
+                </div> 
+            </form>
         </div>
 
 

@@ -65,7 +65,6 @@ def signup(request):
     else:
         return render(request, "signup.html", {"messages": ""})
 
-
 def login(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -86,7 +85,6 @@ def login(request):
     else:
         return render(request, "login.html", {"messages": ""})
 
-#Refazer
 def postadd(request):
     user = User.objects.get(username=request.user.username)
     if user.is_authenticated and request.user.username!="admin":
@@ -108,6 +106,8 @@ def postadd(request):
     else:
         return redirect("login")
 
+
+## EM PROGRESSO
 def postdetail(request, _id):
     if request.user.is_authenticated and request.user.username!="admin":
         user = Utilizador.objects.get(username=request.user.username)
@@ -123,14 +123,15 @@ def comment(request, _id):
     if request.user.is_authenticated and request.user.username!="admin":
         post = Post.objects.get(id=_id)
         user = Utilizador.objects.get(username=request.user.username)
+        comments = Comment.objects.filter(post=post)
         if request.method == "POST":
             comment = request.POST["comment"]
             print(comment)
             Comment.objects.create(user=user, post=post, comment=comment)
-            return redirect("postdetail", post)
-        else:
-            return redirect("postdetail", post)
 
+            return redirect("postdetail", _id)
+        else:
+            return render(request, "comment.html", {"post": post, "comments": comments, "user": user})
     else:
         return redirect("login")
 
