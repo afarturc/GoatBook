@@ -7,9 +7,10 @@
 [x]adicionar post 
 []editar post 
 []remover post
-[]adicionar comment
+[x]adicionar comment
 []remover comment
 []adicionar like
 []remover like
 []search por utilizador
 []search por post
+[x]colocar imagem default no perfil

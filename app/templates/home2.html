@@ -7,11 +7,12 @@
 <div class="space-y-5 flex-shrink-0 lg:w-7/12">
 {% for post in posts %}
   
-    <a href="/post">
+    <a href="/post/{{ post.id }}">
       <div class="card w-1/2 bg-base-100 shadow-2xl mx-auto mb-4">
         <img src="{{ post.image.url }}"/>
         <div class="card-body">
           <small>{{post.date}}</small>
+          <small>{{ post_id }}</small>
           <p>{{post.caption}}</p>
           <div class="card-actions justify-end">
             <button class="btn btn-outline btn-error"><i class="fa-regular fa-heart fa-lg"></i></button>

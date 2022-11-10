@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
-from app.models import Post, Utilizador
+from app.models import Post, Utilizador, Comment, Like
 from app.forms import PostForm
 
 # Create your views here.
 
 def home(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.username!="admin":
         new_users = Utilizador.objects.all()[:5]
         profile = Utilizador.objects.filter(username=request.user.username)
         posts = Post.objects.all().order_by("-date")
@@ -108,12 +108,29 @@ def postadd(request):
     else:
         return redirect("login")
 
+def postdetail(request, _id):
+    if request.user.is_authenticated and request.user.username!="admin":
+        user = Utilizador.objects.get(username=request.user.username)
+        post_id = Post.objects.get(id=_id)
+        comments = Comment.objects.filter(post=post_id)
+        return render(request, "post.html", {"post": post_id, "comments": comments, "user": user})
+    else:
+        post = Post.objects.get(id=_id)
+        comments = Comment.objects.filter(post=post)
+        return render(request, "post2.html", {"post": post, "comments": comments})
 
-def profile(request, username):
-    if request.user.is_authenticated:
-        profile = Utilizador.objects.filter(username=username)
-        posts = Post.objects.filter(user=profile[0])
-        return render(request, "profile.html", {"profile": profile, "posts": posts})
+def comment(request, _id):
+    if request.user.is_authenticated and request.user.username!="admin":
+        post = Post.objects.get(id=_id)
+        user = Utilizador.objects.get(username=request.user.username)
+        if request.method == "POST":
+            comment = request.POST["comment"]
+            print(comment)
+            Comment.objects.create(user=user, post=post, comment=comment)
+            return redirect("postdetail", post)
+        else:
+            return redirect("postdetail", post)
+
     else:
         return redirect("login")
 

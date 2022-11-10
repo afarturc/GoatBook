@@ -8,7 +8,7 @@ class Utilizador (models.Model):
     username = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
     email = models.EmailField(max_length=50)
-    profile_pic = models.ImageField(upload_to='profile_pics', blank=True)
+    profile_pic = models.ImageField(upload_to='profile_pics', blank=True, default= 'default.jpeg')
     following = models.ManyToManyField("self", blank=True, related_name="followers", symmetrical=False)
 
     def __str__(self):
