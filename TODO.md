@@ -15,3 +15,7 @@
 []search por post
 [x]colocar imagem default no perfil
 []pagina Erro
+[]frontend
+[]limpar meus dados
+[]limpar codigo
+[]colocar novos dados 
