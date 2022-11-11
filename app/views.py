@@ -1,26 +1,25 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
 from app.models import Post, Utilizador, Comment, Like
 from app.forms import PostForm, CommentForm, LikeForm, LikeFormDelete
+from django.http import JsonResponse
+
 
 # Create your views here.
-
+# Done
 def home(request):
     if request.user.is_authenticated and request.user.username!="admin":
         ctx = {
             "posts": Post.objects.all().order_by("-date"),
-            "user": Utilizador.objects.get(username=request.user.username),
-            "new_users": Utilizador.objects.all()[:5] #ALterar ainda
+            "user": get_object_or_404(Utilizador, username=request.user.username),
+            "new_users": Utilizador.objects.all()[:5], #ALterar ainda        
         }
-        return render(request, "home.html", ctx)
+        return render(request, "homeUser.html", ctx)
     else:
         ctx={
             "posts": Post.objects.all().order_by("-date"),
         }
-        return render(request, "home2.html", ctx)
-
-def post(request):
-    return render(request, "post.html")
+        return render(request, "home.html", ctx)
 
 # Done
 def logout(request):
@@ -58,7 +57,6 @@ def signup(request):
             return redirect("home")
         else:
             Utilizador.objects.create(username=username, password=password, email=email)
-            #create user
             user = User.objects.create_user(username=username, password=password, email=email)
             auth.login(request, user)
             return redirect("home")
@@ -84,7 +82,7 @@ def login(request):
 def postadd(request):
     user = User.objects.get(username=request.user.username)
     if user.is_authenticated and request.user.username!="admin":
-        utilizador = Utilizador.objects.get(username=request.user.username)
+        utilizador = get_object_or_404(Utilizador, username=request.user.username)
         if request.method == "POST":
             form = PostForm(request.POST, request.FILES)
             if form.is_valid():
@@ -96,7 +94,7 @@ def postadd(request):
                     return redirect("home")
 
         else:
-                ctx ={
+                ctx = {
                     "form": PostForm(),
                     "user": utilizador
                 }
@@ -104,95 +102,110 @@ def postadd(request):
     else:
         return redirect("login")
 
-
-## EM PROGRESSO
+#Done
 def postdetail(request, _id):
-    post_id = Post.objects.get(id=_id)
-    comments = Comment.objects.filter(post=post_id)
-    num_comments = len(comments)
-    likes = Like.objects.filter(post=post_id)
-    num_likes = len(likes)
+    ctx = {
+        "post": get_object_or_404(Post, id=_id),
+        "comments": Comment.objects.filter(post=_id),
+        "num_likes": Like.objects.filter(post=_id).count(),
+        "num_comments": Comment.objects.filter(post=_id).count(),
+    }
+    post=get_object_or_404(Post, id=_id)
     if request.user.is_authenticated and request.user.username!="admin":
-        user = Utilizador.objects.get(username=request.user.username)
-        like_user = len(Like.objects.filter(user=user))
-        print(like_user)
-        #Comentarios
+        user = get_object_or_404(Utilizador, username=request.user.username)
+        ctx["user"]= user
+        ctx["like_user"] = Like.objects.filter(user=user).count()
         if request.method == "POST":
             form_comment = CommentForm(request.POST)
             form_Like = LikeForm(request.POST)
             form_Like_delete = LikeFormDelete(request.POST)
+            #Comentario
             if form_comment.is_valid():
                 comment = form_comment.cleaned_data["comment"]
-                Comment.objects.create(user=user, post=post_id, comment=comment)
+                Comment.objects.create(user=user, post=post, comment=comment)
                 return redirect("postdetail", _id)
+            #Like
             elif form_Like.is_valid():
                 like = form_Like.cleaned_data["like"]
-                Like.objects.create(user=user, post=post_id)
-                return redirect("postdetail", _id)
-            elif form_Like_delete.is_valid():
-                like = Like.objects.filter(user=user, post=post_id)
-                like.delete()
-                return redirect("postdetail", _id)
-        else:
-            form_comment = CommentForm()
-            form_Like = LikeForm()
-            form_Like_delete = LikeFormDelete()
-            return render(request, "post.html", {
-                "post": post_id, 
-                "comments": comments,
-                "num_comments": num_comments, 
-                "likes": likes, 
-                "num_likes": num_likes, 
-                "form_comment": form_comment, 
-                "form_Like": form_Like , 
-                "form_Like_delete": form_Like_delete,
-                "like_user": like_user})
-            
-    else:
-        return render(request, "post2.html", {"post": post_id, "comments": comments, "num_comments": num_comments , "likes": likes, "num_likes": num_likes})
-
-def comment(request, _id):
-    if request.user.is_authenticated and request.user.username!="admin":
-        post = Post.objects.get(id=_id)
-        user = Utilizador.objects.get(username=request.user.username)
-        comments = Comment.objects.filter(post=post)
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = request.POST["comment"]
-            Comment.objects.create(user=user, post=post, comment=comment)
-            return redirect("postdetail", _id)
-        else:
-            return render(request, "post.html", {"post": post, "user": user, "comments": comments, "form": form})
-    else:
-        return redirect("login")
-
-def like(request, _id):
-    if request.user.is_authenticated and request.user.username!="admin":
-        post = Post.objects.get(id=_id)
-        user = Utilizador.objects.get(username=request.user.username)
-        likes = Like.objects.filter(post=post)
-        
-        num_likes = len(likes)
-        if num_likes == 0:
-            form = LikeForm(request.POST)
-
-            if form.is_valid():
                 Like.objects.create(user=user, post=post)
                 return redirect("postdetail", _id)
-            else:
-                return render(request, "post.html", {"post": post, "user": user, "likes": likes, "form": form})
-
-        elif num_likes==1:
-            form = LikeFormDelete(request.POST)
-            if form.is_valid():
+            #Delete Like
+            elif form_Like_delete.is_valid():
                 like = Like.objects.filter(user=user, post=post)
                 like.delete()
                 return redirect("postdetail", _id)
-            else:
-                return render(request, "post.html", {"post": post, "user": user, "likes": likes, "form": form})
-        #else:
-            #return redirect("Error")
+        else:
+            ctx["form_comment"] = CommentForm()
+            ctx["form_Like"] = LikeForm()
+            ctx["form_Like_delete"] = LikeFormDelete()
 
+            return render(request, "postdetail.html", ctx)
+            
+    else:
+        return render(request, "post.html", ctx)
+
+#Done
+def comment(request, _id):
+    if request.user.is_authenticated and request.user.username!="admin":
+        user = get_object_or_404(Utilizador, username=request.user.username)
+        ctx = {
+            "post": get_object_or_404(Post, id=_id),
+            "comments": Comment.objects.filter(post=_id),
+            "user": get_object_or_404(Utilizador, username=request.user.username),
+            "num_likes": Like.objects.filter(post=_id).count(),
+            "num_comments": Comment.objects.filter(post=_id).count(),
+            "form_Like": LikeForm(),
+            "form_Like_delete": LikeFormDelete(),
+            "like_user": Like.objects.filter(user=user).count(),
+        }
+        if request.method == "POST":
+            form_comment = CommentForm(request.POST)
+            if form_comment.is_valid():
+                comment = form_comment.cleaned_data["comment"]
+                Comment.objects.create(user=user, post=_id, comment=comment)
+                Post.objects.filter(id=_id).update(total_comments=Comment.objects.filter(post=_id).count())
+                return redirect("postdetail", _id)
+        else:
+            ctx["form_comment"] = CommentForm()
+            return render(request, "postdetail.html", ctx)
     else:
         return redirect("login")
+
+#Done
+def like(request, _id):
+    if request.user.is_authenticated and request.user.username!="admin":
+        post = get_object_or_404(Post, id=_id)
+        user = get_object_or_404(Utilizador, username=request.user.username)
+
+        ctx = {
+            "post": get_object_or_404(Post, id=_id),
+            "comments": Comment.objects.filter(post=_id),
+            "user": get_object_or_404(Utilizador, username=request.user.username),
+            "num_likes": Like.objects.filter(post=_id).count(),
+            "num_comments": Comment.objects.filter(post=_id).count(),
+            "form_comment": CommentForm(),
+            "like_user": Like.objects.filter(user=user).count(),
+        }
+        
+        if request.method == "POST":
+            form_Like = LikeForm(request.POST)
+            form_Like_delete = LikeFormDelete(request.POST)
+
+            if form_Like.is_valid():
+                like = form_Like.cleaned_data["like"]
+                Like.objects.create(user=user, post=post)
+                return redirect("postdetail", _id)
+
+            elif form_Like_delete.is_valid():
+                like = Like.objects.filter(user=user, post=post)
+                like.delete()
+                return redirect("postdetail", _id)
+        else:
+            ctx["form_Like"] = LikeForm()
+            ctx["form_Like_delete"] = LikeFormDelete()
+            return render(request, "postdetail.html", ctx)
+    else:
+        return redirect("login")
+
+            
 

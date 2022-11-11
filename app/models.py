@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 user=get_user_model()
 
 class Utilizador (models.Model):
-    
     username = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
     email = models.EmailField(max_length=50)
@@ -18,8 +17,8 @@ class Post(models.Model):
     user = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
     caption = models.CharField(max_length=100)
     image = models.ImageField(upload_to='post_pics', blank=True)
-    likes = models.ManyToManyField(Utilizador, related_name='likes', blank=True)
-    comments = models.ManyToManyField(Utilizador, related_name='comments', blank=True)
+    likes = models.ManyToManyField(Utilizador, related_name='likes', blank=True, default=None)
+    comments = models.ManyToManyField(Utilizador, related_name='comments', blank=True, default=None)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

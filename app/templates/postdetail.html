@@ -1,14 +1,38 @@
-{% extends "layout2.html" %}
+{% extends "layout.html" %}
 
 {% block content %}
 <div class="flex">
-    <p class="text-4xl">{{post.caption}}</p>
+<p class="text-4xl">{{post.caption}}</p>
+{% if like_user == 0 %}
+    <form action="."  method="post">
+        {% csrf_token %}
+        <div class="form-control">
+            {{ form_Like.like }}
+        </div>
+    </form>
+{% elif like_user == 1 %}
+<form action="."  method="post">
+    {% csrf_token %}
+    <div class="form-control">
+        {{ form_Like_delete.Unlike }}
+    </div>
+</form>
+{% else %}
+<p>Erro</p>
+{% endif %}
+
 </div>
 <p class="font-extralight">{{post.date}}</p>
-<img class="w-3/4 mx-auto" src="{{post.image.url}}"/>
+<img class="w-3/4 mx-auto" src="{{ post.image.url }}" />
 
 <span class="text-3xl mt-5">Comentários</span><span class="font-extralight">( {{num_comments}} )</span>
 <div class="overflow-x-auto w-full">
+    <form action="." method="POST">
+        {% csrf_token %}
+        <div class="form-control">
+            {{ form_comment.comment }}
+        </div>
+    </form>
     <div class="w-full flex flex-col">
         {% for comment in comments %}
         <div class="flex space-x-3 items-center space-y-5">
@@ -24,4 +48,4 @@
         {% endfor %}
     </div>
 </div>
-    {% endblock %}
+{% endblock %}

@@ -24,16 +24,18 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls), # user: admin, password: admin
     path("", views.home, name="home"),
-    path("post/", views.post, name="post"),
-    
 
     path("logout/", views.logout, name="logout"),
     path("signup/", views.signup, name="signup"),
     path("login/", views.login, name="login"),
+    #path("profile/", views.profile, name="profile"),
+    #path("profile/<str:username>", views.profile, name="profile"),
+
 
     path("postadd/", views.postadd, name="postadd"),
     path("post/<int:_id>/", views.postdetail, name="postdetail"),
-    #path("post/<int:_id>/like/", views.like, name="like"),
+
+    path("post/<int:_id>/like/", views.like, name="like"),
     path("post/<int:_id>/comment/", views.comment, name="comment"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

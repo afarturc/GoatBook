@@ -1,7 +1,5 @@
 from django import forms
 
-
-
 class PostForm(forms.Form):
     caption = forms.CharField(max_length=256, widget=forms.TextInput(
         attrs={
