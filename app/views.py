@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
 from app.models import Post, Utilizador, Comment, Like
-from app.forms import PostForm, CommentForm, LikeForm, LikeFormDelete
+from app.forms import PostForm, CommentForm, LikeForm, LikeFormDelete, ImageForm, PasswordForm, BioForm
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -81,8 +81,7 @@ def login(request):
         
 # Done
 def postadd(request):
-    user = User.objects.get(username=request.user.username)
-    if user.is_authenticated and request.user.username!="admin":
+    if request.user.is_authenticated and request.user.username!="admin":
         utilizador = get_object_or_404(Utilizador, username=request.user.username)
         if request.method == "POST":
             form = PostForm(request.POST, request.FILES)
@@ -146,7 +145,8 @@ def postdetail(request, _id):
         return render(request, "post.html", ctx)
 
 
-def profile(request,username):
+def profile(request):
+
     if request.user.is_authenticated and request.user.username!="admin":
         user = get_object_or_404(Utilizador, username=request.user.username)
         try:
@@ -162,7 +162,9 @@ def profile(request,username):
             #"num_following": Follow.objects.filter(follower=user).count(),
         }
 
-    return render(request, "profile.html", ctx)
+        return render(request, "profile.html", ctx)
+    else:
+        return redirect("login")
 
 def profileUtilizador(request,username):
     try:
@@ -181,3 +183,14 @@ def profileUtilizador(request,username):
 
     return render(request, "profile.html", ctx)
 
+
+def editProfile(request, username):
+    user= get_object_or_404(User, username=username)
+    if user.is_authenticated and request.user.username!="admin":
+        ctx={"user": get_object_or_404(Utilizador, username=username),
+        "formImage": ImageForm(),
+        "formPassword": PasswordForm(),
+        "formBio": BioForm(),}
+        return render(request, "editProfile.html",ctx)
+    else:
+        return redirect("login")

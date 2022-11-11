@@ -1,5 +1,5 @@
 from django import forms
-
+#POST
 class PostForm(forms.Form):
     caption = forms.CharField(max_length=256, widget=forms.TextInput(
         attrs={
@@ -16,6 +16,7 @@ class PostForm(forms.Form):
             "name": "image",
     }))
 
+#COMMENT
 class CommentForm(forms.Form):
     comment = forms.CharField(max_length=256 ,widget=forms.TextInput(
         attrs={
@@ -26,7 +27,7 @@ class CommentForm(forms.Form):
             "row": "3",
     }))
 
-
+#Like
 class LikeForm(forms.Form):
     #disabled button
     like= forms.CharField(max_length=256, widget=forms.TextInput(
@@ -51,4 +52,49 @@ class LikeFormDelete(forms.Form):
     }))
 
 
+class ImageForm(forms.Form):
+    image = forms.ImageField(widget=forms.FileInput(
+        attrs={
+            "class": "form-control",
+            "id": "image",
+            "name": "image",
+    }))
+
+class PasswordForm(forms.Form):
+    atual_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
+        attrs={
+            "class": "form-control",
+            "placeholder": "Atual Password",
+            "id": "password",
+            "name": "password",
+    }))
+
+    nova_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
+        attrs={
+            "class": "form-control",
+            "placeholder": "Nova Password",
+            "id": "password",
+            "name": "password",
+    }))
+
+    confirmar_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
+        attrs={
+            "class": "form-control",
+            "placeholder": "Confirmar Password",
+            "id": "password",
+            "name": "password",
+    }))
+
+class BioForm(forms.Form):
+    bio = forms.CharField(max_length=256, widget=forms.TextInput(
+        attrs={
+            "class": "form-control",
+            "placeholder": "Bio",
+            "id": "bio",
+            "name": "bio",
+    }))
     
+
+
+
+
