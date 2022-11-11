@@ -8,7 +8,7 @@
 []editar post 
 []remover post
 [x]adicionar comment
-[]remover comment
+[]remover comment (quem fez o post e quem comentou)
 [x]adicionar like
 [x]remover like
 []search por utilizador

@@ -7,32 +7,32 @@ from app.forms import PostForm, CommentForm, LikeForm, LikeFormDelete
 
 def home(request):
     if request.user.is_authenticated and request.user.username!="admin":
-        new_users = Utilizador.objects.all()[:5]
-        profile = Utilizador.objects.filter(username=request.user.username)
-        posts = Post.objects.all().order_by("-date")
-        return render(request, "home.html", {"profile": profile, "posts": posts, "new_users": new_users})
+        ctx = {
+            "posts": Post.objects.all().order_by("-date"),
+            "user": Utilizador.objects.get(username=request.user.username),
+            "new_users": Utilizador.objects.all()[:5] #ALterar ainda
+        }
+        return render(request, "home.html", ctx)
     else:
-        posts = Post.objects.all()
-        print(posts)
-        return render(request, "home2.html", {"posts": posts})
+        ctx={
+            "posts": Post.objects.all().order_by("-date"),
+        }
+        return render(request, "home2.html", ctx)
 
 def post(request):
     return render(request, "post.html")
 
+# Done
 def logout(request):
     auth.logout(request)
     return redirect("home")
-
+# Done
 def signup(request):
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         email = request.POST["email"]
-        if request.FILES:
-            image = request.FILES["image"]
-        else:
-            image = None
 
         if User.objects.filter(username=username).exists():
             return render(request, "signup.html", {"messages": "Username already exists."})
@@ -51,6 +51,7 @@ def signup(request):
             return render(request, "signup.html", {"messages": "Email already exists."})
         
         elif request.FILES:
+            image = request.FILES["image"]
             Utilizador.objects.create(username=username, password=password, email=email, profile_pic=image)
             user = User.objects.create_user(username=username, password=password, email=email)
             auth.login(request, user)
@@ -65,26 +66,21 @@ def signup(request):
     else:
         return render(request, "signup.html", {"messages": ""})
 
+# Done
 def login(request):
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
-        
-
-        print(username, password)
-
         user = auth.authenticate(username=username, password=password)
-
-        print(user)
         if user is not None:
             auth.login(request, user)
             return redirect("home")
         else:
-            print("User does not exist")
             return render(request, "login.html", {"messages": "Invalid credentials."})
     else:
         return render(request, "login.html", {"messages": ""})
-
+        
+# Done
 def postadd(request):
     user = User.objects.get(username=request.user.username)
     if user.is_authenticated and request.user.username!="admin":
@@ -92,16 +88,19 @@ def postadd(request):
         if request.method == "POST":
             form = PostForm(request.POST, request.FILES)
             if form.is_valid():
-                image = request.FILES["image"]
-                caption = request.POST["caption"]
-
+                image = form.cleaned_data["image"]
+                caption =  form.cleaned_data["caption"]
+                
                 if caption and image:
                     Post.objects.create(user=utilizador, image=image, caption=caption)
                     return redirect("home")
 
         else:
-                form=PostForm()
-                return render(request, "postadd.html", {"form": form, "user": utilizador})
+                ctx ={
+                    "form": PostForm(),
+                    "user": utilizador
+                }
+                return render(request, "postadd.html", ctx)
     else:
         return redirect("login")
 
