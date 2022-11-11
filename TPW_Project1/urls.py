@@ -34,8 +34,7 @@ urlpatterns = [
 
     path("postadd/", views.postadd, name="postadd"),
     path("post/<int:_id>/", views.postdetail, name="postdetail"),
-
-    path("post/<int:_id>/like/", views.like, name="like"),
-    path("post/<int:_id>/comment/", views.comment, name="comment"),
+    path("post/<int:_id>/like/", views.postdetail, name="like"),
+    path("post/<int:_id>/comment/", views.postdetail, name="comment"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

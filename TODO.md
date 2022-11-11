@@ -12,8 +12,10 @@
 [x]adicionar comment
 []remover comment (quem fez o post e quem comentou)
 
-[x]adicionar like
-[x]remover like
+[x]adicionar like post
+[x]remover like post
+[]adicionar like home
+[]adicionar like home
 
 []search por utilizador
 []search por post
@@ -26,6 +28,6 @@
 []follow 
 []unfollow
 
-[]limpar meus dados
+[]limpar dados
 []limpar codigo
 []colocar novos dados 
