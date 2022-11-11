@@ -18,6 +18,26 @@ class PostForm(forms.Form):
             "name": "image",
     }))
 
+class CommentForm(forms.Form):
+    comment = forms.CharField(max_length=256, widget=forms.TextInput(
+        attrs={
+            "class" :"input w-full", 
+            "placeholder": "Comment", 
+            "id": "comment", 
+            "name": "comment",
+            "row": "3",
+    }))
+
+
+class LikeForm(forms.Form):
+    like = forms.CharField(max_length=256, widget=forms.TextInput(
+        attrs={
+            "class": "form-control", 
+            "placeholder": "Like", 
+            "id": "like", 
+            "name": "like",
+            "row": "3",
+    }))
 
 
     

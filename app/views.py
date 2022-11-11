@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
 from app.models import Post, Utilizador, Comment, Like
-from app.forms import PostForm
+from app.forms import PostForm, CommentForm, LikeForm
 
 # Create your views here.
 
@@ -90,7 +90,6 @@ def postadd(request):
     if user.is_authenticated and request.user.username!="admin":
         utilizador = Utilizador.objects.get(username=request.user.username)
         if request.method == "POST":
-            print("POST")
             form = PostForm(request.POST, request.FILES)
             if form.is_valid():
                 image = request.FILES["image"]
@@ -113,25 +112,43 @@ def postdetail(request, _id):
         user = Utilizador.objects.get(username=request.user.username)
         post_id = Post.objects.get(id=_id)
         comments = Comment.objects.filter(post=post_id)
-        return render(request, "post.html", {"post": post_id, "comments": comments, "user": user})
+        num_comments = len(comments)
+        likes = Like.objects.filter(post=post_id)
+        num_likes = len(likes)
+
+        #Comentarios
+        if request.method == "POST":
+            form_comment = CommentForm(request.POST)
+            form_Like = LikeForm(request.POST)
+            if form_comment.is_valid():
+                comment = request.POST["comment"]
+                Comment.objects.create(user=user, post=post_id, comment=comment)
+                return redirect("postdetail", _id)
+            elif form_Like.is_valid():
+                Like.objects.create(user=user, post=post_id)
+                return redirect("postdetail", _id)
+        else:
+            form_comment = CommentForm()
+            form_Like = LikeForm()
+            return render(request, "post.html", {"post": post_id, "comments": comments, "num_comments": num_comments, "likes": likes, "num_likes": num_likes, "form_comment": form_comment, "form_Like": form_Like})
+            
     else:
         post = Post.objects.get(id=_id)
         comments = Comment.objects.filter(post=post)
-        return render(request, "post2.html", {"post": post, "comments": comments})
+        return render(request, "post2.html", {"post": post, "comments": comments, "num_comments": num_comments , "likes": likes, "num_likes": num_likes})
 
 def comment(request, _id):
     if request.user.is_authenticated and request.user.username!="admin":
         post = Post.objects.get(id=_id)
         user = Utilizador.objects.get(username=request.user.username)
         comments = Comment.objects.filter(post=post)
-        if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
             comment = request.POST["comment"]
-            print(comment)
             Comment.objects.create(user=user, post=post, comment=comment)
-
             return redirect("postdetail", _id)
         else:
-            return render(request, "comment.html", {"post": post, "comments": comments, "user": user})
+            return render(request, "post.html", {"post": post, "user": user, "comments": comments, "form": form})
     else:
         return redirect("login")
 

@@ -3,17 +3,25 @@
 {% block content %}
 <div class="flex">
 <p class="text-4xl">Card Title</p>
-<button class="btn btn-outline btn-error"><i class="fa-regular fa-heart fa-lg"></i></button>
+    <form action="."  method="post">
+        {% csrf_token %}
+        <button class="btn btn-outline btn-error"><i class="fa-regular fa-heart fa-lg"></i></button>
+        {{ form_like.like }}
+    </form>
 </div>
 <p class="font-extralight">05-10-2022</p>
 <img class="w-3/4 mx-auto" src="{{ post.image.url }}" />
 
-<span class="text-3xl mt-5">Comentários</span><span class="font-extralight">(20)</span>
+<span class="text-3xl mt-5">Comentários</span><span class="font-extralight">{{ num_likes }}</span>
 <div class="overflow-x-auto w-full">
     <div class="w-full flex flex-col">
-        <div class="flex space-x-3 items-center space-y-5">
-            <button class="btn btn-primary"><a href="/post/{{ post.id }}/comment">Comentar </a></button>
-        </div>
+        <form action="." method="POST">
+            {% csrf_token %}
+            <div class="form-control">
+                {{ form_comment.comment }}
+            </div>
+        </form>
+
 
 
         {% for comment in comments %}
