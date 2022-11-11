@@ -3,11 +3,26 @@
 {% block content %}
 <div class="flex">
 <p class="text-4xl">Card Title</p>
+{% if like_user == 0 %}
     <form action="."  method="post">
         {% csrf_token %}
-        <button class="btn btn-outline btn-error"><i class="fa-regular fa-heart fa-lg"></i></button>
-        {{ form_like.like }}
+        <!-- <button class="btn btn-outline btn-error"><i class="fa-regular fa-heart fa-lg"></i></button> -->
+        <div class="form-control">
+            {{ form_Like.like }}
+        </div>
     </form>
+{% elif like_user == 1 %}
+<form action="."  method="post">
+    {% csrf_token %}
+    <!-- <button class="btn btn-outline btn-error"><i class="fa-regular fa-heart fa-lg"></i></button> -->
+    <div class="form-control">
+        {{ form_Like_delete.Unlike }}
+    </div>
+</form>
+{% else %}
+<p>Erro</p>
+{% endif %}
+
 </div>
 <p class="font-extralight">05-10-2022</p>
 <img class="w-3/4 mx-auto" src="{{ post.image.url }}" />

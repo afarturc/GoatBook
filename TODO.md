@@ -9,8 +9,8 @@
 []remover post
 [x]adicionar comment
 []remover comment
-[]adicionar like
-[]remover like
+[x]adicionar like
+[x]remover like
 []search por utilizador
 []search por post
 [x]colocar imagem default no perfil

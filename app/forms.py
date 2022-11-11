@@ -19,7 +19,7 @@ class PostForm(forms.Form):
     }))
 
 class CommentForm(forms.Form):
-    comment = forms.CharField(max_length=256, widget=forms.TextInput(
+    comment = forms.CharField(max_length=256 ,widget=forms.TextInput(
         attrs={
             "class" :"input w-full", 
             "placeholder": "Comment", 
@@ -30,13 +30,26 @@ class CommentForm(forms.Form):
 
 
 class LikeForm(forms.Form):
-    like = forms.CharField(max_length=256, widget=forms.TextInput(
+    #disabled button
+    like= forms.CharField(max_length=256, widget=forms.TextInput(
         attrs={
-            "class": "form-control", 
-            "placeholder": "Like", 
-            "id": "like", 
+            "class" :"btn btn-primary",
+            "type": "submit",
+            "value": "Like",
+            "id": "like",
             "name": "like",
-            "row": "3",
+    }))
+    
+
+class LikeFormDelete(forms.Form):
+    #active button
+    Unlike = forms.CharField(max_length=256, widget=forms.TextInput(
+        attrs={
+            "class" :"btn btn-primary",
+            "type": "submit",
+            "value": "Unlike",
+            "id": "Unlike",
+            "name": "Unlike",
     }))
 
 
