@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
 from app.models import Post, Utilizador, Comment, Like
 from app.forms import PostForm, CommentForm, LikeForm, LikeFormDelete
-from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # Create your views here.
@@ -12,8 +12,9 @@ def home(request):
         ctx = {
             "posts": Post.objects.all().order_by("-date"),
             "user": get_object_or_404(Utilizador, username=request.user.username),
-            "new_users": Utilizador.objects.all()[:5], #ALterar ainda        
+            "new_users": Utilizador.objects.all()[:5], #ALterar ainda    
         }
+
         return render(request, "homeUser.html", ctx)
     else:
         ctx={
@@ -143,4 +144,40 @@ def postdetail(request, _id):
             
     else:
         return render(request, "post.html", ctx)
+
+
+def profile(request,username):
+    if request.user.is_authenticated and request.user.username!="admin":
+        user = get_object_or_404(Utilizador, username=request.user.username)
+        try:
+            posts = Post.objects.filter(user=user).order_by("-date")
+        except ObjectDoesNotExist:
+            posts = []
+
+        ctx = {
+            "user": user,
+            "posts": posts,
+            "num_posts": len(posts),
+            #"num_followers": Follow.objects.filter(followed=user).count(),
+            #"num_following": Follow.objects.filter(follower=user).count(),
+        }
+
+    return render(request, "profile.html", ctx)
+
+def profileUtilizador(request,username):
+    try:
+        user = get_object_or_404(Utilizador, username=username)
+        posts = Post.objects.filter(user=user).order_by("-date")
+    except ObjectDoesNotExist:
+        posts = []
+
+    ctx = {
+        "user": user,
+        "posts": posts,
+        "num_posts": len(posts),
+        #"num_followers": Follow.objects.filter(followed=user).count(),
+        #"num_following": Follow.objects.filter(follower=user).count(),
+    }
+
+    return render(request, "profile.html", ctx)
 
