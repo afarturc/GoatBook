@@ -167,17 +167,33 @@ def comment(request, _id):
     else:
         return redirect("login")
 
-
-def like (request,_id):
+def like(request, _id):
     if request.user.is_authenticated and request.user.username!="admin":
         post = Post.objects.get(id=_id)
         user = Utilizador.objects.get(username=request.user.username)
         likes = Like.objects.filter(post=post)
-        form = LikeForm(request.POST)
-        if form.is_valid():
-            Like.objects.create(user=user, post=post)
-            return redirect("postdetail", _id)
-        else:
-            return render(request, "post.html", {"post": post, "user": user, "likes": likes, "form": form})
+        
+        num_likes = len(likes)
+        if num_likes == 0:
+            form = LikeForm(request.POST)
+
+            if form.is_valid():
+                Like.objects.create(user=user, post=post)
+                return redirect("postdetail", _id)
+            else:
+                return render(request, "post.html", {"post": post, "user": user, "likes": likes, "form": form})
+
+        elif num_likes==1:
+            form = LikeFormDelete(request.POST)
+            if form.is_valid():
+                like = Like.objects.filter(user=user, post=post)
+                like.delete()
+                return redirect("postdetail", _id)
+            else:
+                return render(request, "post.html", {"post": post, "user": user, "likes": likes, "form": form})
+        #else:
+            #return redirect("Error")
+
     else:
         return redirect("login")
+

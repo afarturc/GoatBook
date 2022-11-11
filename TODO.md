@@ -14,3 +14,4 @@
 []search por utilizador
 []search por post
 [x]colocar imagem default no perfil
+[]pagina Erro
