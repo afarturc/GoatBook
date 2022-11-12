@@ -14,7 +14,6 @@ def home(request):
             "posts": Post.objects.all().order_by("-date"),
             "user": get_object_or_404(Utilizador, username=request.user.username),
             "new_users": Utilizador.objects.all()[:5], #ALterar ainda    
-            "template": "layout.html",
             "comments_count": Comment.objects.all().count(),
             "likes_count": Like.objects.all().count(),
         }
@@ -23,7 +22,6 @@ def home(request):
     else:
         ctx={   
             "friend": False,
-            "template": "layout2.html",
             "posts": Post.objects.all().order_by("-date"),
             "comments_count": Comment.objects.all().count(),
             "likes_count": Like.objects.all().count(),
