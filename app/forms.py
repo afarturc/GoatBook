@@ -61,28 +61,28 @@ class ImageForm(forms.Form):
     }))
 
 class PasswordForm(forms.Form):
-    atual_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
+    old_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
         attrs={
             "class": "form-control",
             "placeholder": "Atual Password",
-            "id": "password",
-            "name": "password",
+            "id": "old_password",
+            "name": "old_password",
     }))
 
-    nova_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
+    new_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
         attrs={
             "class": "form-control",
             "placeholder": "Nova Password",
-            "id": "password",
-            "name": "password",
+            "id": "new_password",
+            "name": "new_password",
     }))
 
-    confirmar_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
+    password_confirm = forms.CharField(max_length=256, widget=forms.PasswordInput(
         attrs={
             "class": "form-control",
             "placeholder": "Confirmar Password",
-            "id": "password",
-            "name": "password",
+            "id": "password_confirm",
+            "name": "password_confirm",
     }))
 
 class BioForm(forms.Form):
@@ -93,7 +93,7 @@ class BioForm(forms.Form):
             "id": "bio",
             "name": "bio",
     }))
-    
+
 
 
 

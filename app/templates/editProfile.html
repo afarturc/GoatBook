@@ -7,7 +7,7 @@
     <div class="row d-flex justify-content-center pt-5 text-center">
         <div class="col-2">
 
-            <form action="." method="POST" enctype="multipart/form-data">
+            <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <div class="form-group py-4">
@@ -24,18 +24,7 @@
                  </div>
             </form>
 
-            <form action="." method="post">
-                {% csrf_token %}
-                <h5>Bio</h5>
-
-                <div class="form-group py-4">
-                    {{ formBio.bio }}
-                </div>
-
-
-            </form>
-
-            <form action="." method="POST">
+            <form action="" method="POST">
                 {% csrf_token %}
 
                 <div class="form-group py-4">
@@ -46,11 +35,11 @@
                     </div>
 
                     <div class="custom-file pt-4">
-                        {{ formPassword.new_password1 }}
+                        {{ formPassword.new_password }}
                     </div>
 
                     <div class="custom-file pt-4">
-                        {{ formPassword.new_password2 }}
+                        {{ formPassword.password_confirm }}
                     </div>
 
                 </div>
