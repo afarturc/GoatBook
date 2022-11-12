@@ -148,6 +148,7 @@ def postdetail(request, _id):
 def profile(request):
 
     if request.user.is_authenticated and request.user.username!="admin":
+        print("User is authenticated")
         user = get_object_or_404(Utilizador, username=request.user.username)
         try:
             posts = Post.objects.filter(user=user).order_by("-date")
@@ -189,31 +190,49 @@ def profileUtilizador(request,username):
 def editProfile(request, username):
     user = get_object_or_404(User, username=username)
     if user.is_authenticated and request.user.username!="admin":
-        if request.method == "POST":
-            form_image = ImageForm(request.POST)
-            form_bio = BioForm(request.POST)
-            form_password = PasswordForm(request.POST)
-            if form_image.is_valid():
-                image = form_image.cleaned_data["image"]
-                if image:
-                    Utilizador.objects.filter(username=username).update(profile_pic=image)
-                    return redirect("editProfile", username)
-            if form_bio.is_valid():
-                bio = form_bio.cleaned_data["bio"]
-                if bio:
-                    Utilizador.objects.filter(username=username).update(bio=bio)
-                    return redirect("editProfile", username)
-            if form_password.is_valid():
-                old_pw = form_password.cleaned_data["atual_password"]
-                new_pw = form_password.cleaned_data["nova_password"]
-                if new_pw and old_pw == user.password:
-                    Utilizador.objects.filter(username=username).update(password=new_pw)
-                    return redirect("editProfile", username)
-        else:
-            ctx={"user": get_object_or_404(Utilizador, username=username),
-            "formImage": ImageForm(),
-            "formPassword": PasswordForm(),
-            "formBio": BioForm(),}
-            return render(request, "editProfile.html",ctx)
+        sucesso = False
+        utilizador = Utilizador.objects.get(username=username)
+        ctx={"user": utilizador}
+
+        if request.method == "POST" and 'image' in request.FILES:
+            formImage= ImageForm(request.POST, request.FILES)
+            if formImage.is_valid():
+                file = formImage.cleaned_data["image"]
+                if file:
+                    utilizador.profile_pic = file
+                    utilizador.update_image(file)
+                    utilizador.save()
+                    sucesso = True
+            
+        if request.method == "POST" and 'password' in request.POST:
+            formPassword= PasswordForm(request.POST)
+            if formPassword.is_valid():
+                old_password = formPassword.cleaned_data["old_password"]
+                new_password = formPassword.cleaned_data["new_password"]
+                password_confirm = formPassword.cleaned_data["password_confirm"]
+                if new_password != password_confirm:
+                    print("Passwords don't match")
+                    sucesso = False
+                else:
+
+                    if user.check_password(old_password):
+                        print("Password antiga correta")
+                        user.set_password(new_password)
+                        user.save()
+
+                        utilizador.update_password(new_password)
+                        utilizador.save()
+                        sucesso = True
+                    else:
+                        sucesso = False
+                        
+        if not sucesso:
+            ctx["formImage"] = ImageForm()
+            ctx["formBio"] = BioForm()
+            ctx["formPassword"] = PasswordForm()
+
+            return render(request, "editProfile.html", ctx)
+        
+        return redirect("/profile")
     else:
         return redirect("login")

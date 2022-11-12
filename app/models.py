@@ -11,6 +11,13 @@ class Utilizador (models.Model):
     profile_pic = models.ImageField(upload_to='profile_pics', blank=True, default= 'default.jpeg')
     following = models.ManyToManyField("self", blank=True, related_name="followers", symmetrical=False)
 
+    def update_image(self, file):
+        self.profile_pic.storage.delete(self.profile_pic.name)
+        self.profile_pic = file
+
+    def update_password(self, password):
+        self.password = password
+
     def __str__(self):
         return self.username
 
