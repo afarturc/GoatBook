@@ -10,10 +10,14 @@
           <div class="card-body">
             <h2 class="card-title">{{post.caption}}</h2>
             <small>{{ post.date }}</small>
-            <small>Comentários: {{ comments_count }}</small>
-            <small>likes: {{ likes_count }}</small>
+            <small>Comentários: {{ post.comment_count }}</small>
+            <small>likes: <span id="like_count">{{ post.like_count }}</span></small>
             <div class="card-actions justify-end">
-              <button class="btn btn-outline btn-error" value="{{post.id}}"><i class="fa-regular fa-heart fa-lg"></i></button>
+              {%if user in post.likes.all %}
+                <button class="btn btn-outline btn-error" value="{{post.id}}" id="like_button"><i class="fa-solid fa-heart fa-lg"></i></button>
+              {% else %}
+                <button class="btn btn-outline btn-error" value="{{post.id}}" id="like_button"><i class="fa-regular fa-heart fa-lg"></i></button>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -48,4 +52,30 @@
     {% endif %}
   </div>
 </div>
+<script>
+  $(document).on('click', '#like_button', function(e) {
+    e.preventDefault();
+    var post_id = $(this).val();
+    $.ajax({
+      url: '{% url "like_post" %}',
+      type: 'POST',
+      data: {
+        'user_id': {{ user.id }},
+        'post_id': post_id,
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'action': 'post'
+      },
+      success: function(json) {
+        if (json['type'] == 'like'){
+          document.getElementById("like_count").innerHTML = json['result'];
+          document.getElementById("like_button").innerHTML = '<i class="fa-solid fa-heart fa-lg"></i>';
+        } else {
+          document.getElementById("like_count").innerHTML = json['result'];
+          document.getElementById("like_button").innerHTML = '<i class="fa-regular fa-heart fa-lg"></i>';
+        }
+        console.log(json)
+      }
+    });
+  });
+</script>
 {% endblock %}
