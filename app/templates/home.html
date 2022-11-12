@@ -13,14 +13,13 @@
             <small>Comentários: {{ post.comment_count }}</small>
             <small>likes: <span id="like_count">{{ post.like_count }}</span></small>
             <div class="card-actions justify-end">
-              <button class="btn btn-outline btn-error" value="{{post.id}}" id="like_button">
-                <i class="fa-regular fa-heart fa-lg" />
-              </button>
+              <button class="btn btn-outline btn-error" value="{{post.id}}" id="like_button"><i class="fa-regular fa-heart fa-lg"></i></button>
             </div>
           </div>
         </div>
       </a>
     {% endfor %}
+
     {% if friend %}
       <div class="lg:w-5/12">
         <div class="bg-white  shadow-md rounded-md overflow-hidden">
