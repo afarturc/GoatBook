@@ -306,4 +306,19 @@ def postedit(request,_id):
         
 
 def like(request):
-    pass
+    if request.POST.get('action') == 'post':
+        type = ''
+        result = ''
+        post_id = request.POST.get('post_id')
+        user_id = request.POST.get('user_id')
+        user = get_object_or_404(Utilizador, id=user_id)
+        post = get_object_or_404(Post, id=post_id)
+        if post.likes.filter(id=user_id).exists():
+            post.remove_like(user)
+            type = 'unlike'
+            result = post.like_count
+        else:
+            type = 'like'
+            post.add_like(user)
+            result = post.like_count
+        return JsonResponse({'result': result, 'type': type})
