@@ -14,15 +14,17 @@ def home(request):
             "posts": Post.objects.all().order_by("-date"),
             "user": get_object_or_404(Utilizador, username=request.user.username),
             "new_users": Utilizador.objects.all()[:5], #ALterar ainda    
-            "template": "layout.html",
+            "comments_count": Comment.objects.all().count(),
+            "likes_count": Like.objects.all().count(),
         }
 
         return render(request, "home.html", ctx)
     else:
         ctx={   
             "friend": False,
-            "template": "layout2.html",
             "posts": Post.objects.all().order_by("-date"),
+            "comments_count": Comment.objects.all().count(),
+            "likes_count": Like.objects.all().count(),
         }
         return render(request, "home.html", ctx)
 
@@ -30,6 +32,7 @@ def home(request):
 def logout(request):
     auth.logout(request)
     return redirect("home")
+
 # Done
 def signup(request):
     if request.method == "POST":
@@ -150,7 +153,6 @@ def postdetail(request, _id):
 
 
 def profile(request):
-
     if request.user.is_authenticated and request.user.username!="admin":
         print("User is authenticated")
         user = get_object_or_404(Utilizador, username=request.user.username)
