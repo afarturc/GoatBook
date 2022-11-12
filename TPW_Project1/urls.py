@@ -38,9 +38,9 @@ urlpatterns = [
     path("post/<int:_id>/comment/", views.postdetail, name="comment"),
     path("post/<int:_id>/delete/", views.postdelete, name="delete"),
     path("post/<int:_id>/edit/", views.postedit, name="edit"),
+    
 
     path("post/<int:_id>/comment/<int:_id_comment>/delete/", views.commentdelete, name="deletecomment"),
-    #path("post/<int:_id>/comment/<int:_id_comment>/edit/", views.commentedit, name="editcomment"),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -17,8 +17,7 @@
 []adicionar like home
 []adicionar like home
 
-[]search por utilizador
-[]search por post
+[]search 
 
 [x]colocar imagem default no perfil
 []pagina Erro
