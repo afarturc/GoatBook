@@ -10,6 +10,7 @@ class Utilizador (models.Model):
     email = models.EmailField(max_length=50)
     profile_pic = models.ImageField(upload_to='profile_pics', blank=True, default= 'default.jpeg')
     following = models.ManyToManyField("self", blank=True, related_name="followers", symmetrical=False)
+    #post_count = models.IntegerField(default=0)
 
     def update_image(self, file):
         self.profile_pic.storage.delete(self.profile_pic.name)
@@ -17,6 +18,9 @@ class Utilizador (models.Model):
 
     def update_password(self, password):
         self.password = password
+
+    # def get_post_count(self):
+    #     return self.posts.count()
     
     def __str__(self):
         return self.username
@@ -75,4 +79,3 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['-date']
-

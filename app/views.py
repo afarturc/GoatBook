@@ -167,7 +167,6 @@ def profile(request):
         ctx = {
             "user": user,
             "posts": posts,
-            "num_posts": len(posts),
             #"num_followers": Follow.objects.filter(followed=user).count(),
             #"num_following": Follow.objects.filter(follower=user).count(),
         }
@@ -186,7 +185,6 @@ def profileUtilizador(request,username):
     ctx = {
         "user": user,
         "posts": posts,
-        "num_posts": len(posts),
         #"num_followers": Follow.objects.filter(followed=user).count(),
         #"num_following": Follow.objects.filter(follower=user).count(),
     }
@@ -222,9 +220,9 @@ def editProfile(request, username):
                     sucesso = False
                 else:
 
-                    if user.check_password(old_password):
-                        user.set_password(new_password)
-                        user.save()
+                    if request.user.check_password(old_password):
+                        request.user.set_password(new_password)
+                        request.user.save()
 
                         utilizador.update_password(new_password)
                         utilizador.save()
