@@ -28,8 +28,11 @@ def home(request):
 
 # Done
 def logout(request):
-    auth.logout(request)
-    return redirect("home")
+    if request.user.is_authenticated and request.user.username!="admin":
+        auth.logout(request)
+        return redirect("home")
+    else:
+        return redirect("login")
 
 # Done
 def signup(request):
@@ -165,7 +168,6 @@ def profile(request):
             "user": user,
             "posts": posts,
             "num_posts": len(posts),
-            "template": "layout.html",
             #"num_followers": Follow.objects.filter(followed=user).count(),
             #"num_following": Follow.objects.filter(follower=user).count(),
         }
@@ -185,7 +187,6 @@ def profileUtilizador(request,username):
         "user": user,
         "posts": posts,
         "num_posts": len(posts),
-        "template": "layout2.html",
         #"num_followers": Follow.objects.filter(followed=user).count(),
         #"num_following": Follow.objects.filter(follower=user).count(),
     }
@@ -194,8 +195,9 @@ def profileUtilizador(request,username):
 
 #Done
 def editProfile(request, username):
-    user = get_object_or_404(User, username=username)
-    if user.is_authenticated and request.user.username!="admin":
+    if request.user.is_authenticated and request.user.username!="admin":
+        if request.user.username != username:
+            return redirect("profile")
         sucesso = False
         utilizador = Utilizador.objects.get(username=username)
         ctx={"user": utilizador}
