@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
 from app.models import Post, Utilizador, Comment
-from app.forms import PostForm, CommentForm, LikeForm, LikeFormDelete, ImageForm, PasswordForm, BioForm
+from app.forms import PostForm, CommentForm, ImageForm, PasswordForm, BioForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 
@@ -113,35 +113,20 @@ def postdetail(request, _id):
     ctx = {
         "post": post,
         "comments": Comment.objects.filter(post=_id),
-        "num_comments": Comment.objects.filter(post=_id).count(),
     }
     post=get_object_or_404(Post, id=_id)
     if request.user.is_authenticated and request.user.username!="admin":
         user = get_object_or_404(Utilizador, username=request.user.username)
         ctx["user"]= user
-        ctx["like_user"] = post.user_has_liked(user)
         if request.method == "POST":
             form_comment = CommentForm(request.POST)
-            form_Like = LikeForm(request.POST)
-            form_Like_delete = LikeFormDelete(request.POST)
-            #Comentario
             if form_comment.is_valid():
                 comment = form_comment.cleaned_data["comment"]
                 Comment.objects.create(user=user, post=post, comment=comment)
                 post.add_comment()
                 return redirect("postdetail", _id)
-            #Like
-            elif form_Like.is_valid():
-                post.add_like(user)
-                return redirect("postdetail", _id)
-            #Delete Like
-            elif form_Like_delete.is_valid():
-                post.remove_like(user)
-                return redirect("postdetail", _id)
         else:
             ctx["form_comment"] = CommentForm()
-            ctx["form_Like"] = LikeForm()
-            ctx["form_Like_delete"] = LikeFormDelete()
 
             return render(request, "postdetail.html", ctx)
             

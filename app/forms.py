@@ -44,30 +44,6 @@ class CommentForm(forms.Form):
     }))
 
 
-#Like
-class LikeForm(forms.Form):
-    #disabled button
-    like= forms.CharField(max_length=256, widget=forms.TextInput(
-        attrs={
-            "class" :"btn btn-primary",
-            "type": "submit",
-            "value": "Like",
-            "id": "like",
-            "name": "like",
-    }))
-    
-
-class LikeFormDelete(forms.Form):
-    #active button
-    Unlike = forms.CharField(max_length=256, widget=forms.TextInput(
-        attrs={
-            "class" :"btn btn-primary",
-            "type": "submit",
-            "value": "Unlike",
-            "id": "Unlike",
-            "name": "Unlike",
-    }))
-
 
 class ImageForm(forms.Form):
     image = forms.ImageField(widget=forms.FileInput(
