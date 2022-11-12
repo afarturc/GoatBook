@@ -3,7 +3,7 @@
 [x]logout
 [x]criar nova conta
 [x]profile
-[]editar perfil
+[x]editar perfil
 
 [x]adicionar post 
 []editar post 

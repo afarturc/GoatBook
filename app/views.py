@@ -10,14 +10,18 @@ from django.core.exceptions import ObjectDoesNotExist
 def home(request):
     if request.user.is_authenticated and request.user.username!="admin":
         ctx = {
+            "friend":True,
             "posts": Post.objects.all().order_by("-date"),
             "user": get_object_or_404(Utilizador, username=request.user.username),
             "new_users": Utilizador.objects.all()[:5], #ALterar ainda    
+            "template": "layout.html",
         }
 
-        return render(request, "homeUser.html", ctx)
+        return render(request, "home.html", ctx)
     else:
-        ctx={
+        ctx={   
+            "friend": False,
+            "template": "layout2.html",
             "posts": Post.objects.all().order_by("-date"),
         }
         return render(request, "home.html", ctx)
@@ -204,19 +208,17 @@ def editProfile(request, username):
                     utilizador.save()
                     sucesso = True
             
-        if request.method == "POST" and 'password' in request.POST:
+        if request.method == "POST" and 'old_password' in request.POST and 'new_password' in request.POST and 'password_confirm' in request.POST:
             formPassword= PasswordForm(request.POST)
             if formPassword.is_valid():
                 old_password = formPassword.cleaned_data["old_password"]
                 new_password = formPassword.cleaned_data["new_password"]
                 password_confirm = formPassword.cleaned_data["password_confirm"]
                 if new_password != password_confirm:
-                    print("Passwords don't match")
                     sucesso = False
                 else:
 
                     if user.check_password(old_password):
-                        print("Password antiga correta")
                         user.set_password(new_password)
                         user.save()
 
@@ -225,6 +227,15 @@ def editProfile(request, username):
                         sucesso = True
                     else:
                         sucesso = False
+
+        if request.method == "POST" and 'bio' in request.POST:
+            formBio= BioForm(request.POST)
+            if formBio.is_valid():
+                bio = formBio.cleaned_data["bio"]
+                if bio:
+                    utilizador.bio = bio
+                    utilizador.save()
+                    sucesso = True
                         
         if not sucesso:
             ctx["formImage"] = ImageForm()

@@ -16,6 +16,13 @@ class PostForm(forms.Form):
             "name": "image",
     }))
 
+class DeletePostForm(forms.Form):
+    post_id = forms.IntegerField(widget=forms.HiddenInput(
+        attrs={
+            "id": "post_id",
+            "name": "post_id",
+    }))
+
 #COMMENT
 class CommentForm(forms.Form):
     comment = forms.CharField(max_length=256 ,widget=forms.TextInput(
@@ -93,6 +100,8 @@ class BioForm(forms.Form):
             "id": "bio",
             "name": "bio",
     }))
+
+
 
 
 
