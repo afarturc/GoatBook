@@ -2,25 +2,25 @@
 
 {% block content %}
 <div class="flex">
-<p class="text-4xl">{{post.caption}}</p>
-{% if like_user == 0 %}
-    <form action="."  method="post">
-        {% csrf_token %}
-        <div class="form-control">
-            {{ form_Like.like }}
-        </div>
-    </form>
-{% elif like_user == 1 %}
-<form action="."  method="post">
-    {% csrf_token %}
-    <div class="form-control">
-        {{ form_Like_delete.Unlike }}
-    </div>
-</form>
-{% else %}
-{% endif %}
-
+    <p class="text-4xl">{{post.caption}}</p>
+    {% if like_user == 0 %}
+        <form action="."  method="post">
+            {% csrf_token %}
+            <div class="form-control">
+                {{ form_Like.like }}
+            </div>
+        </form>
+    {% elif like_user == 1 %}
+        <form action="."  method="post">
+            {% csrf_token %}
+            <div class="form-control">
+                {{ form_Like_delete.Unlike }}
+            </div>
+        </form>
+    {% else %}
+    {% endif %}
 </div>
+
 <p class="font-extralight">{{post.date}}</p>
 <img class="w-3/4 mx-auto" src="{{ post.image.url }}" />
 

@@ -3,7 +3,7 @@ from django import forms
 class PostForm(forms.Form):
     caption = forms.CharField(max_length=256, widget=forms.TextInput(
         attrs={
-            "class": "form-control", 
+            "class": "form-control w-full rounded h-10 border-solid", 
             "placeholder": "Caption", 
             "id": "caption", 
             "name": "caption",
@@ -70,24 +70,24 @@ class ImageForm(forms.Form):
 class PasswordForm(forms.Form):
     old_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
         attrs={
-            "class": "form-control",
-            "placeholder": "Atual Password",
+            "class": "form-control rounded h-10 w-full border-solid",
+            "placeholder": "Old Password",
             "id": "old_password",
             "name": "old_password",
     }))
 
     new_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
         attrs={
-            "class": "form-control",
-            "placeholder": "Nova Password",
+            "class": "form-control rounded h-10 w-full border-solid",
+            "placeholder": "New Password",
             "id": "new_password",
             "name": "new_password",
     }))
 
     password_confirm = forms.CharField(max_length=256, widget=forms.PasswordInput(
         attrs={
-            "class": "form-control",
-            "placeholder": "Confirmar Password",
+            "class": "form-control rounded h-10 w-full border-solid",
+            "placeholder": "Confirm New Password",
             "id": "password_confirm",
             "name": "password_confirm",
     }))
