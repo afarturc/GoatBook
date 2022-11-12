@@ -63,32 +63,32 @@ class ImageForm(forms.Form):
 class PasswordForm(forms.Form):
     atual_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
         attrs={
-            "class": "form-control",
-            "placeholder": "Atual Password",
-            "id": "password",
+            "class": "form-control w-full",
+            "placeholder": "Old Password",
+            "id": "old_password",
             "name": "password",
     }))
 
     nova_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
         attrs={
-            "class": "form-control",
-            "placeholder": "Nova Password",
-            "id": "password",
+            "class": "form-control w-full",
+            "placeholder": "New Password",
+            "id": "new_password",
             "name": "password",
     }))
 
     confirmar_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
         attrs={
-            "class": "form-control",
-            "placeholder": "Confirmar Password",
-            "id": "password",
+            "class": "form-control w-full",
+            "placeholder": "Confirm New Password",
+            "id": "confirm_password",
             "name": "password",
     }))
 
 class BioForm(forms.Form):
-    bio = forms.CharField(max_length=256, widget=forms.TextInput(
+    bio = forms.CharField(max_length=256, widget=forms.Textarea(
         attrs={
-            "class": "form-control",
+            "class": "form-control w-full",
             "placeholder": "Bio",
             "id": "bio",
             "name": "bio",

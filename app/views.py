@@ -53,7 +53,7 @@ def signup(request):
         elif request.FILES:
             image = request.FILES["image"]
             Utilizador.objects.create(username=username, password=password, email=email, profile_pic=image)
-            user = User.objects.create_user(username=username, password=password, email=email)
+            user = User.objects.create_user(username=username, password=password, email=email, profile_pic=image)
             auth.login(request, user)
             return redirect("home")
         else:
@@ -158,6 +158,7 @@ def profile(request):
             "user": user,
             "posts": posts,
             "num_posts": len(posts),
+            "template": "layout.html",
             #"num_followers": Follow.objects.filter(followed=user).count(),
             #"num_following": Follow.objects.filter(follower=user).count(),
         }
@@ -177,6 +178,7 @@ def profileUtilizador(request,username):
         "user": user,
         "posts": posts,
         "num_posts": len(posts),
+        "template": "layout2.html",
         #"num_followers": Follow.objects.filter(followed=user).count(),
         #"num_following": Follow.objects.filter(follower=user).count(),
     }
@@ -185,12 +187,33 @@ def profileUtilizador(request,username):
 
 
 def editProfile(request, username):
-    user= get_object_or_404(User, username=username)
+    user = get_object_or_404(User, username=username)
     if user.is_authenticated and request.user.username!="admin":
-        ctx={"user": get_object_or_404(Utilizador, username=username),
-        "formImage": ImageForm(),
-        "formPassword": PasswordForm(),
-        "formBio": BioForm(),}
-        return render(request, "editProfile.html",ctx)
+        if request.method == "POST":
+            form_image = ImageForm(request.POST)
+            form_bio = BioForm(request.POST)
+            form_password = PasswordForm(request.POST)
+            if form_image.is_valid():
+                image = form_image.cleaned_data["image"]
+                if image:
+                    Utilizador.objects.filter(username=username).update(profile_pic=image)
+                    return redirect("editProfile", username)
+            if form_bio.is_valid():
+                bio = form_bio.cleaned_data["bio"]
+                if bio:
+                    Utilizador.objects.filter(username=username).update(bio=bio)
+                    return redirect("editProfile", username)
+            if form_password.is_valid():
+                old_pw = form_password.cleaned_data["atual_password"]
+                new_pw = form_password.cleaned_data["nova_password"]
+                if new_pw and old_pw == user.password:
+                    Utilizador.objects.filter(username=username).update(password=new_pw)
+                    return redirect("editProfile", username)
+        else:
+            ctx={"user": get_object_or_404(Utilizador, username=username),
+            "formImage": ImageForm(),
+            "formPassword": PasswordForm(),
+            "formBio": BioForm(),}
+            return render(request, "editProfile.html",ctx)
     else:
         return redirect("login")
