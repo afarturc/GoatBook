@@ -24,7 +24,7 @@
 <p class="font-extralight">{{post.date}}</p>
 <img class="w-3/4 mx-auto" src="{{ post.image.url }}" />
 
-<span class="text-3xl mt-5">Comentários</span><span class="font-extralight">( {{num_comments}} )</span>
+<span class="text-3xl mt-5">Comentários</span><span class="font-extralight">( {{post.comment_count}} )</span>
 <div class="overflow-x-auto w-full">
     <form action="." method="POST">
         {% csrf_token %}

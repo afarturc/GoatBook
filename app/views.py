@@ -89,18 +89,18 @@ def postadd(request):
     if request.user.is_authenticated and request.user.username!="admin":
         utilizador = get_object_or_404(Utilizador, username=request.user.username)
         if request.method == "POST":
-            form = PostForm(request.POST, request.FILES)
-            if form.is_valid():
-                image = form.cleaned_data["image"]
-                caption =  form.cleaned_data["caption"]
+            formPost = PostForm(request.POST, request.FILES)
+            if formPost.is_valid():
+                photo = formPost.cleaned_data["photo"]
+                caption =  formPost.cleaned_data["caption"]
                 
-                if caption and image:
-                    Post.objects.create(user=utilizador, image=image, caption=caption)
+                if caption and photo:
+                    Post.objects.create(user=utilizador, image=photo, caption=caption)
                     return redirect("home")
 
         else:
                 ctx = {
-                    "form": PostForm(),
+                    "formPost": PostForm(),
                     "user": utilizador
                 }
                 return render(request, "postadd.html", ctx)

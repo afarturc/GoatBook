@@ -1,52 +1,60 @@
-{% extends "layout2.html" %}
+{% extends "layout.html" %}
 
 {% block content %}
 <div>
-    <div class="lg:p-12 max-w-md max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
-        <h1 class="lg:text-3xl text-xl font-semibold mb-6"> Signup</h1>
-        <div>
-            <style>
-                h5{
-                    color: red;
-                }
-            </style>
-            <h5>{{ messages }}</h5>
-        </div>
+    <div class="lg:p-12 max-w-md max-w-xl lg:my-0 my-12 mx-auto p-6">
+        <h1 class="text-5xl font-bold mb-6 tracking-wider">Sign In</h1>
+
         <form action="" method="post">
             {% csrf_token %}
 
 
-            <div class="form-control w-full max-w-xs">
+            <div class="form-control w-full">
                 <label class="label">
-                  <span class="label-text">What is your name?</span>
+                    <span class="label-text font-bold">What is your name?</span>
                 </label>
-                <input type="text" placeholder="Type here" class="input input-bordered w-full" />
-              </div>
+                <input type="text" placeholder="Username" class="input input-bordered w-full" type="text"
+                    name="username" id="username" />
+            </div>
 
-            <div class="mb-4">
-                <label class="block text-black text-sm font-bold mb-2" for="username">Username</label>
-                <input class="border border-gray-400 p-2 w-full" type="text" name="username" id="username">
+            <div class="form-control w-full">
+                <label class="label">
+                    <span class="label-text font-bold">What is your email address?</span>
+                </label>
+                <input type="text" placeholder="Email" class="input input-bordered w-full" type="email" name="email"
+                    id="email" />
             </div>
-            <div class="mb-4">
-                <label class="block text-black text-sm font-bold mb-2" for="email">Email</label>
-                <input class="border border-gray-400 p-2 w-full" type="email" name="email" id="email">
+
+
+            <div class="form-control w-full">
+                <label class="label">
+                    <span class="label-text font-bold">What is your password?</span>
+                </label>
+                <input placeholder="Password" class="input input-bordered w-full" type="password" name="password"
+                    id="password" />
             </div>
-            <div class="mb-4">
-                <label class="block text-black text-sm font-bold mb-2" for="password">Password</label>
-                <input class="border border-gray-400 p-2 w-full" type="password" name="password" id="password">
+
+            <div class="form-control w-full">
+                <label class="label">
+                    <span class="label-text font-bold">Confirm Password</span>
+                </label>
+                <input placeholder="Password confirmation" class="input input-bordered w-full" type="password"
+                    name="confirmation" id="password2" />
             </div>
-            <div class="mb-4">
-                <label class="block text-black text-sm font-bold mb-2" for="password2">Confirm Password</label>
-                <input class="border border-gray-400 p-2 w-full" type="password" name="confirmation" id="password2">
+
+
+            <div class="form-control w-full">
+                <label class="label">
+                    <span class="label-text font-bold">What is your avatar?</span>
+                </label>
+                <input type="file" class="file-input file-input-bordered file-input-primary w-full" name="photo"
+                    id="photo" />
             </div>
-            <!--colocar fotografia-->
-            <div class="mb-4">
-                <label class="block text-black text-sm font-bold mb-2" for="photo">Photo</label>
-                <input class="border border-gray-400 p-2 w-full" type="file" name="photo" id="photo">
+
+            <div class="mb-4 mt-4">
+                <button class="btn btn-active btn-primary btn-wide w-full" type="submit">Sign in</button>
             </div>
-            <div class="mb-4">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded to-red-400 w-full" type="submit">Sign Up</button>
-            </div>
+
 
             <div class="flex justify-start my-4 space-x-1">
                 <div>
@@ -57,7 +65,8 @@
 
             </div>
             <div class="text-center mt-5 space-x-2">
-                <p class="text-base"> Do you have an account? <a href="{% url 'login' %}"> Login </a></p>
+                <p class="text-base"> Do you have an account? <a class="text-primary font-bold"
+                        href="{% url 'login' %}"> Login </a></p>
             </div>
         </form>
     </div>
