@@ -33,56 +33,62 @@ def logout(request):
 
 # Done
 def signup(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
-        email = request.POST["email"]
-
-        if User.objects.filter(username=username).exists():
-            return render(request, "signup.html", {"messages": "Username already exists."})
-
-        elif password != confirmation:
-            return render(request, "signup.html", {"messages": "Passwords must match."})
-
-        elif User.objects.filter(email=email).exists():
-            print("Email already exists")
-            return render(request, "signup.html", {"messages": "Email already exists."})
-
-        elif Utilizador.objects.filter(username=username).exists():
-            return render(request, "signup.html", {"messages": "Username already exists."})
-
-        elif Utilizador.objects.filter(email=email).exists():
-            return render(request, "signup.html", {"messages": "Email already exists."})
-        
-        elif request.FILES:
-            image = request.FILES["image"]
-            Utilizador.objects.create(username=username, password=password, email=email, profile_pic=image)
-            user = User.objects.create_user(username=username, password=password, email=email, profile_pic=image)
-            auth.login(request, user)
-            return redirect("home")
-        else:
-            Utilizador.objects.create(username=username, password=password, email=email)
-            user = User.objects.create_user(username=username, password=password, email=email)
-            auth.login(request, user)
-            return redirect("home")
-
+    if request.user.is_authenticated and request.user.username!="admin":
+        return redirect("home")
     else:
-        return render(request, "signup.html", {"messages": ""})
+        if request.method == "POST":
+            username = request.POST["username"]
+            password = request.POST["password"]
+            confirmation = request.POST["confirmation"]
+            email = request.POST["email"]
+
+            if User.objects.filter(username=username).exists():
+                return render(request, "signup.html", {"messages": "Username already exists."})
+
+            elif password != confirmation:
+                return render(request, "signup.html", {"messages": "Passwords must match."})
+
+            elif User.objects.filter(email=email).exists():
+                print("Email already exists")
+                return render(request, "signup.html", {"messages": "Email already exists."})
+
+            elif Utilizador.objects.filter(username=username).exists():
+                return render(request, "signup.html", {"messages": "Username already exists."})
+
+            elif Utilizador.objects.filter(email=email).exists():
+                return render(request, "signup.html", {"messages": "Email already exists."})
+            
+            elif request.FILES:
+                image = request.FILES["image"]
+                Utilizador.objects.create(username=username, password=password, email=email, profile_pic=image)
+                user = User.objects.create_user(username=username, password=password, email=email, profile_pic=image)
+                auth.login(request, user)
+                return redirect("home")
+            else:
+                Utilizador.objects.create(username=username, password=password, email=email)
+                user = User.objects.create_user(username=username, password=password, email=email)
+                auth.login(request, user)
+                return redirect("home")
+
+        else:
+            return render(request, "signup.html", {"messages": ""})
 
 # Done
 def login(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = auth.authenticate(username=username, password=password)
-        if user is not None:
-            auth.login(request, user)
-            return redirect("home")
-        else:
-            return render(request, "login.html", {"messages": "Invalid credentials."})
+    if request.user.is_authenticated and request.user.username!="admin":
+        return redirect("home")
     else:
-        return render(request, "login.html", {"messages": ""})
+        if request.method == "POST":
+            username = request.POST["username"]
+            password = request.POST["password"]
+            user = auth.authenticate(username=username, password=password)
+            if user is not None:
+                auth.login(request, user)
+                return redirect("home")
+            else:
+                return render(request, "login.html", {"messages": "Invalid credentials."})
+        else:
+            return render(request, "login.html", {"messages": ""})
         
 # Done
 def postadd(request):
@@ -113,6 +119,7 @@ def postdetail(request, _id):
     ctx = {
         "post": post,
         "comments": Comment.objects.filter(post=_id),
+        "exist_like" : False
     }
     post=get_object_or_404(Post, id=_id)
     if request.user.is_authenticated and request.user.username!="admin":
@@ -127,12 +134,23 @@ def postdetail(request, _id):
                 return redirect("postdetail", _id)
         else:
             ctx["form_comment"] = CommentForm()
+            ctx["exist_like"] = True
 
             return render(request, "postdetail.html", ctx)
-            
     else:
-        return render(request, "post.html", ctx)
+        return render(request, "postdetail.html", ctx)
 
+def postlike(request, _id):
+    if request.user.is_authenticated and request.user.username!="admin":
+        return redirect("postdetail", _id)
+    else:
+        return redirect("login")
+
+def postcomment(request, _id):
+    if request.user.is_authenticated and request.user.username!="admin":
+        redirect("postdetail", _id)
+    else:
+        return redirect("login")
 
 def profile(request):
     if request.user.is_authenticated and request.user.username!="admin":

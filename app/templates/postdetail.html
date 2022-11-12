@@ -5,6 +5,7 @@
     <p class="text-4xl">{{post.caption}}</p>
 
 </div>
+{% if exist_like %}
 <div class="card-actions justify-end">
     {%if user in post.likes.all %}
         <button class="btn btn-outline btn-error btn-like" value="{{post.id}}" id="btn_{{post.id}}"><i class="fa-solid fa-heart fa-lg"></i></button>
@@ -12,17 +13,20 @@
         <button class="btn btn-outline btn-error btn-like" value="{{post.id}}" id="btn_{{post.id}}"><i class="fa-regular fa-heart fa-lg"></i></button>
     {% endif %}
 </div>
+{% endif %}
 <p class="font-extralight">{{post.date}}</p>
 <img class="w-3/4 mx-auto" src="{{ post.image.url }}" />
 
 <span class="text-3xl mt-5">Comentários</span><span class="font-extralight">( {{post.comment_count}} )</span>
 <div class="overflow-x-auto w-full">
-    <form action="." method="POST">
-        {% csrf_token %}
-        <div class="form-control">
-            {{ form_comment.comment }}
-        </div>
-    </form>
+    {% if user %}
+        <form action="." method="POST">
+            {% csrf_token %}
+            <div class="form-control">
+                {{ form_comment.comment }}
+            </div>
+        </form>
+    {% endif %}
     <div class="w-full flex flex-col">
         {% for comment in comments %}
         <div class="flex space-x-3 items-center space-y-5">
