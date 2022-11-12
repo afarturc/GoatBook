@@ -242,7 +242,7 @@ def editProfile(request, username):
             ctx["formBio"] = BioForm()
             ctx["formPassword"] = PasswordForm()
 
-            return render(request, "editProfile.html", ctx)
+            return render(request, "profileedit.html", ctx)
         
         return redirect("/profile")
     else:
@@ -267,6 +267,39 @@ def commentdelete(request,_id, _id_comment):
             return redirect("postdetail", comment.post.id)
         else:
             return redirect("postdetail", comment.post.id)
+    else:
+        return redirect("login")
+
+def postedit(request,_id):
+    post = get_object_or_404(Post, id=_id)
+    if request.user.is_authenticated and request.user.username!="admin":
+        if request.user.username == post.user.username:
+            ctx = {
+                "post": post,
+                "form_postedit": PostForm(),
+                "user": Utilizador.objects.get(username=request.user.username),
+            }
+            if request.method == "POST":
+                form_postedit = PostForm(request.POST, request.FILES)
+                ctx["form_postedit"]=form_postedit
+                if form_postedit.is_valid():
+                    caption = form_postedit.cleaned_data["caption"]
+                    image = form_postedit.cleaned_data["image"]
+
+                    if image :
+                        post.image = image
+                        sucesso = True
+                    if caption:
+                        post.caption = caption
+                        sucesso = True
+                    if sucesso:
+                        post.save()
+                        return redirect("postdetail", _id)
+                    
+            else:
+                return render(request, "postedit.html", ctx)
+        else:
+            return redirect("postdetail", _id)
     else:
         return redirect("login")
         

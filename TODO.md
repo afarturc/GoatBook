@@ -6,7 +6,7 @@
 [x]editar perfil
 
 [x]adicionar post 
-[]editar post 
+[x]editar post 
 [x]remover post
 
 [x]adicionar comment

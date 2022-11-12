@@ -18,11 +18,6 @@ class PostForm(forms.Form):
 
 
 class EditPostForm(forms.Form):
-    post_id = forms.IntegerField(widget=forms.HiddenInput(
-        attrs={
-            "id": "post_id",
-            "name": "post_id",
-    }))
     caption = forms.CharField(max_length=256, widget=forms.TextInput(
         attrs={
             "class": "form-control", 
