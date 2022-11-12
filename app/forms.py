@@ -16,11 +16,21 @@ class PostForm(forms.Form):
             "name": "image",
     }))
 
-class DeletePostForm(forms.Form):
-    post_id = forms.IntegerField(widget=forms.HiddenInput(
+
+class EditPostForm(forms.Form):
+    caption = forms.CharField(max_length=256, widget=forms.TextInput(
         attrs={
-            "id": "post_id",
-            "name": "post_id",
+            "class": "form-control", 
+            "placeholder": "Caption", 
+            "id": "caption", 
+            "name": "caption",
+            "row": "3",
+    }))
+    image = forms.ImageField(widget=forms.FileInput(
+        attrs={
+            "class": "form-control",
+            "id": "image",
+            "name": "image",
     }))
 
 #COMMENT
@@ -33,6 +43,7 @@ class CommentForm(forms.Form):
             "name": "comment",
             "row": "3",
     }))
+
 
 #Like
 class LikeForm(forms.Form):
