@@ -13,7 +13,11 @@
             <small>Comentários: {{ post.comment_count }}</small>
             <small>likes: <span id="like_count">{{ post.like_count }}</span></small>
             <div class="card-actions justify-end">
-              <button class="btn btn-outline btn-error" value="{{post.id}}" id="like_button"><i class="fa-regular fa-heart fa-lg"></i></button>
+              {%if user in post.likes.all %}
+                <button class="btn btn-outline btn-error" value="{{post.id}}" id="like_button"><i class="fa-solid fa-heart fa-lg"></i></button>
+              {% else %}
+                <button class="btn btn-outline btn-error" value="{{post.id}}" id="like_button"><i class="fa-regular fa-heart fa-lg"></i></button>
+              {% endif %}
             </div>
           </div>
         </div>
