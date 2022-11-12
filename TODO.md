@@ -7,10 +7,10 @@
 
 [x]adicionar post 
 []editar post 
-[]remover post
+[x]remover post
 
 [x]adicionar comment
-[]remover comment (quem fez o post e quem comentou)
+[x]remover comment (quem fez o post e quem comentou)
 
 [x]adicionar like post
 [x]remover like post

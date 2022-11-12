@@ -259,3 +259,15 @@ def postdelete(request, _id):
     else:
         return redirect("login")
 
+def commentdelete(request,_id, _id_comment):
+    comment = get_object_or_404(Comment, id=_id_comment)
+    if request.user.is_authenticated and request.user.username!="admin":
+        if request.user.username == comment.user.username:
+            comment.delete()
+            return redirect("postdetail", comment.post.id)
+        else:
+            return redirect("postdetail", comment.post.id)
+    else:
+        return redirect("login")
+        
+
