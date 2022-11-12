@@ -7,26 +7,24 @@
     <div class="flex flex-col gap-4">
         <form action="." method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="form-group py-4">
-                <div class="font-semibold">
-                    {{ form.caption.label_tag }}
-                </div>
-                <div class="pt-4">
-                    {{ form.caption }}
-                </div>
+            <p class="mx-auto text-3xl font-bold mb-6 tracking-wider">New Post</p>
+            <div class="form-control w-full">
+              <label class="label">
+                <span class="label-text font-bold">Caption</span>
+              </label>
+              {{ formPost.caption }}
             </div>
-            <div class="custom-file pt-4">
-                <div class="font-semibold">
-                    {{ form.image.label_tag }}
-                </div>
-                <div class="pt-4">
-                    {{ form.image }}
-                </div>
+    
+            <div class=" form-control">
+              <label class="label">
+                <span class="label-text font-bold">Image</span>
+              </label>
+              {{ formPost.image }}
             </div>
             <div class="pt-4">
-                <button class="btn btn-primary w-full" type="submit">Upload</button>
+              <button class="btn btn-active btn-primary btn-wide w-full" type="submit">Sign in</button>
             </div>
-        </form>
+          </form>
     </div>
 </div>
 

@@ -3,17 +3,16 @@ from django import forms
 class PostForm(forms.Form):
     caption = forms.CharField(max_length=256, widget=forms.TextInput(
         attrs={
-            "class": "form-control w-full rounded h-10 border-solid", 
+            "class": "input input-bordered w-full", 
             "placeholder": "Caption", 
             "id": "caption", 
-            "name": "caption",
-            "row": "3",
+            "name": "caption"
     }))
     image = forms.ImageField(widget=forms.FileInput(
         attrs={
-            "class": "form-control",
-            "id": "image",
-            "name": "image",
+            "class": "file-input file-input-bordered file-input-primary w-full",
+            "id": "photo",
+            "name": "photo"
     }))
 
 
