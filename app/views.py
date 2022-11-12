@@ -190,7 +190,7 @@ def profileUtilizador(request,username):
 
     return render(request, "profile.html", ctx)
 
-
+#Done
 def editProfile(request, username):
     user = get_object_or_404(User, username=username)
     if user.is_authenticated and request.user.username!="admin":
@@ -247,3 +247,15 @@ def editProfile(request, username):
         return redirect("/profile")
     else:
         return redirect("login")
+
+def postdelete(request, _id):
+    post = get_object_or_404(Post, id=_id)
+    if request.user.is_authenticated and request.user.username!="admin":
+        if request.user.username == post.user.username:
+            post.delete()
+            return redirect("profile")
+        else:
+            return redirect("postdetail", _id)
+    else:
+        return redirect("login")
+

@@ -32,6 +32,10 @@ class Post(models.Model):
     def __str__(self):
         return self.caption
 
+    def delete(self):
+        self.image.storage.delete(self.image.name)
+        super().delete()
+
     class Meta:
         ordering = ['-date']
 
