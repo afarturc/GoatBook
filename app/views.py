@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
-from app.models import Post, Utilizador, Comment, Like
+from app.models import Post, Utilizador, Comment
 from app.forms import PostForm, CommentForm, LikeForm, LikeFormDelete, ImageForm, PasswordForm, BioForm
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -14,8 +15,6 @@ def home(request):
             "posts": Post.objects.all().order_by("-date"),
             "user": get_object_or_404(Utilizador, username=request.user.username),
             "new_users": Utilizador.objects.all()[:5], #ALterar ainda    
-            "comments_count": Comment.objects.all().count(),
-            "likes_count": Like.objects.all().count(),
         }
 
         return render(request, "home.html", ctx)
@@ -24,7 +23,6 @@ def home(request):
             "friend": False,
             "posts": Post.objects.all().order_by("-date"),
             "comments_count": Comment.objects.all().count(),
-            "likes_count": Like.objects.all().count(),
         }
         return render(request, "home.html", ctx)
 
@@ -111,17 +109,17 @@ def postadd(request):
 
 #Done
 def postdetail(request, _id):
+    post = get_object_or_404(Post, id=_id)
     ctx = {
-        "post": get_object_or_404(Post, id=_id),
+        "post": post,
         "comments": Comment.objects.filter(post=_id),
-        "num_likes": Like.objects.filter(post=_id).count(),
         "num_comments": Comment.objects.filter(post=_id).count(),
     }
     post=get_object_or_404(Post, id=_id)
     if request.user.is_authenticated and request.user.username!="admin":
         user = get_object_or_404(Utilizador, username=request.user.username)
         ctx["user"]= user
-        ctx["like_user"] = Like.objects.filter(user=user).count()
+        ctx["like_user"] = post.user_has_liked(user)
         if request.method == "POST":
             form_comment = CommentForm(request.POST)
             form_Like = LikeForm(request.POST)
@@ -130,16 +128,15 @@ def postdetail(request, _id):
             if form_comment.is_valid():
                 comment = form_comment.cleaned_data["comment"]
                 Comment.objects.create(user=user, post=post, comment=comment)
+                post.add_comment()
                 return redirect("postdetail", _id)
             #Like
             elif form_Like.is_valid():
-                like = form_Like.cleaned_data["like"]
-                Like.objects.create(user=user, post=post)
+                post.add_like(user)
                 return redirect("postdetail", _id)
             #Delete Like
             elif form_Like_delete.is_valid():
-                like = Like.objects.filter(user=user, post=post)
-                like.delete()
+                post.remove_like(user)
                 return redirect("postdetail", _id)
         else:
             ctx["form_comment"] = CommentForm()
@@ -262,9 +259,11 @@ def postdelete(request, _id):
         return redirect("login")
 
 def commentdelete(request,_id, _id_comment):
+    post = get_object_or_404(Post, id=_id)
     comment = get_object_or_404(Comment, id=_id_comment)
     if request.user.is_authenticated and request.user.username!="admin":
         if request.user.username == comment.user.username:
+            post.remove_comment()
             comment.delete()
             return redirect("postdetail", comment.post.id)
         else:
@@ -306,3 +305,5 @@ def postedit(request,_id):
         return redirect("login")
         
 
+def like(request):
+    pass

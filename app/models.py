@@ -17,7 +17,7 @@ class Utilizador (models.Model):
 
     def update_password(self, password):
         self.password = password
-
+    
     def __str__(self):
         return self.username
 
@@ -26,7 +26,8 @@ class Post(models.Model):
     caption = models.CharField(max_length=100)
     image = models.ImageField(upload_to='post_pics', blank=True)
     likes = models.ManyToManyField(Utilizador, related_name='likes', blank=True, default=None)
-    comments = models.ManyToManyField(Utilizador, related_name='comments', blank=True, default=None)
+    like_count = models.IntegerField(default=0)
+    comment_count = models.IntegerField(default=0)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -35,17 +36,30 @@ class Post(models.Model):
     def delete(self):
         self.image.storage.delete(self.image.name)
         super().delete()
+    
+    def get_likes_count(self):
+        return self.likes.count()
+    
+    def user_has_liked(self, user):
+        return self.likes.filter(id=user.id).exists()
 
-    class Meta:
-        ordering = ['-date']
+    def remove_like(self, user):
+        self.likes.remove(user)    
+        self.like_count -= 1
+        super().save()
 
-class Like(models.Model):
-    user = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.user.username
+    def add_like(self, user):
+        self.likes.add(user)
+        self.like_count += 1
+        super().save()
+    
+    def add_comment(self):
+        self.comment_count += 1
+        super().save()
+    
+    def remove_comment(self):
+        self.comment_count -= 1
+        super().save()
 
     class Meta:
         ordering = ['-date']
