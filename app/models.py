@@ -8,7 +8,7 @@ class Utilizador (models.Model):
     password = models.CharField(max_length=20)
     bio = models.CharField(max_length=256, blank=True)
     email = models.EmailField(max_length=50)
-    profile_pic = models.ImageField(upload_to='profile_pics', blank=True, default= 'default.jpeg')
+    profile_pic = models.ImageField(upload_to='profile_pics', blank=True, default= 'default.png')
     following = models.ManyToManyField("self", blank=True, related_name="followers", symmetrical=False)
     #post_count = models.IntegerField(default=0)
 

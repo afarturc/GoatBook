@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
 from app.models import Post, Utilizador, Comment
-from app.forms import PostForm, CommentForm, ImageForm, PasswordForm, BioForm
+from app.forms import FormSingup, CommentForm, ImageForm, PasswordForm, BioForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 
@@ -34,47 +34,51 @@ def logout(request):
     else:
         return redirect("login")
 
-
+# *Done
 def signup(request):
     if request.user.is_authenticated and request.user.username!="admin":
         return redirect("home")
     else:
         if request.method == "POST":
-            username = request.POST["username"]
-            password = request.POST["password"]
-            confirmation = request.POST["confirmation"]
-            email = request.POST["email"]
+            formSignup = FormSingup(request.POST)
+            if formSignup.is_valid():
+                username = formSignup.cleaned_data["username"]
+                email = formSignup.cleaned_data["email"]
+                password = formSignup.cleaned_data["password"]
+                confirmation = formSignup.cleaned_data["confirmation"]
 
-            if User.objects.filter(username=username).exists():
-                return render(request, "signup.html", {"messages": "Username already exists."})
-
-            elif password != confirmation:
-                return render(request, "signup.html", {"messages": "Passwords must match."})
-
-            elif User.objects.filter(email=email).exists():
-                print("Email already exists")
-                return render(request, "signup.html", {"messages": "Email already exists."})
-
-            elif Utilizador.objects.filter(username=username).exists():
-                return render(request, "signup.html", {"messages": "Username already exists."})
-
-            elif Utilizador.objects.filter(email=email).exists():
-                return render(request, "signup.html", {"messages": "Email already exists."})
-            
-            elif request.FILES:
-                image = request.FILES["image"]
-                Utilizador.objects.create(username=username, password=password, email=email, profile_pic=image)
-                user = User.objects.create_user(username=username, password=password, email=email, profile_pic=image)
-                auth.login(request, user)
-                return redirect("home")
+                if password == confirmation:
+                    if User.objects.filter(username=username).exists() or Utilizador.objects.filter(username=username).exists():
+                        print("Username already exists")
+                        return render(request, "signup.html", {"messages": "Username already exists." , "formSignup": formSignup})
+                    elif User.objects.filter(email=email).exists() or Utilizador.objects.filter(email=email).exists():
+                        print("Email already exists.")
+                        return render(request, "signup.html", {"messages": "Email already exists.", "formSignup": formSignup})
+                    elif request.FILES:
+                        print("entrou")
+                        photo = request.FILES["photo"]
+                        User.objects.create_user(username=username, email=email, password=password)
+                        Utilizador.objects.create(username=username, email=email, password=password, profile_pic=photo)
+                        auth.login(request, User.objects.get(username=username))
+                        return redirect("home")
+                    else:
+                        print("Erro")
+                        user = User.objects.create_user(username=username, password=password, email=email)
+                        user.save()
+                        Utilizador.objects.create(username=username, email=email, password=password)
+                        auth.login(request, user)
+                        return redirect("home")
+                    
+                else:
+                    print("Passwords don't match.")
+                    return render(request, "signup.html", {"messages": "Passwords do not match.", "formSignup": formSignup})
             else:
-                Utilizador.objects.create(username=username, password=password, email=email)
-                user = User.objects.create_user(username=username, password=password, email=email)
-                auth.login(request, user)
-                return redirect("home")
-
+                print("Invalid form.")
+                return render(request, "signup.html", {"messages": "Invalid credentials.", "formSignup": formSignup})
         else:
-            return render(request, "signup.html", {"messages": ""})
+            print("GET")
+            return render(request, "signup.html", {"messages": "", "formSignup": FormSingup()})
+        
 
 def login(request):
     if request.user.is_authenticated and request.user.username!="admin":
@@ -109,7 +113,6 @@ def postadd(request):
     else:
         return redirect("login")
 
-#Done
 def postdetail(request, _id):
     post = get_object_or_404(Post, id=_id)
     ctx = {

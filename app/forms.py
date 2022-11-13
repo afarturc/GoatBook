@@ -1,5 +1,38 @@
 from django import forms
 
+class FormSingup(forms.Form):
+    username = forms.CharField( widget=forms.TextInput(
+        attrs={'class': 'input input-bordered w-full',
+                'placeholder': 'Username',
+                'id': 'username',
+                'name': 'username',}))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={'class': 'input input-bordered w-full',
+                'placeholder': 'Password',
+                'id': 'password',
+                'name': 'password',}))
+
+    email = forms.EmailField( widget=forms.EmailInput(
+        attrs={'class': 'input input-bordered w-full',
+                'placeholder': 'Email',
+                'id': 'email',
+                'name': 'email',}))
+
+    confirmation = forms.CharField(widget=forms.PasswordInput(
+        attrs={'class': 'input input-bordered w-full',
+                'placeholder': 'Confirm Password',
+                'id': 'password2',
+                'name': 'confirmation',}))
+    
+    photo = forms.ImageField(required=False, widget=forms.FileInput(
+        attrs={'class': 'file-input file-input-bordered file-input-primary w-full',
+                'placeholder': 'Photo',
+                'id': 'photo',
+                'name': 'photo',}))
+
+
+
+
 class EditPostForm(forms.Form):
     caption = forms.CharField(max_length=256, widget=forms.TextInput(
         attrs={

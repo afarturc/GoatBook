@@ -1,28 +1,25 @@
-[x]Home (alterar depois)
-[x]login
+[x]Home 
+[]login
 [x]logout
-[x]criar nova conta
-[x]profile
-[x]editar perfil
+[]criar nova conta
+[]profile
+[]editar perfil
 
 [x]adicionar post 
-[x]editar post 
-[x]remover post
+[]editar post 
+[]remover post
 
-[x]adicionar comment
-[x]remover comment (quem fez o post e quem comentou)
+[]adicionar comment
+[]remover comment (quem fez o post e quem comentou)
 
-[x]adicionar like post
-[x]remover like post
-[]adicionar like home
-[]adicionar like home
+[]adicionar like
+[]remover like 
 
 []search 
 
-[x]colocar imagem default no perfil
+[]colocar imagem default no perfil
 []pagina Erro
 []frontend
-
 
 []follow 
 []unfollow

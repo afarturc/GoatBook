@@ -20,7 +20,7 @@
     <div class="flex-1">
         <a href="/" class="btn btn-ghost normal-case text-3xl">🐐 Book</a>
     </div>
-    {% if user.username %}
+    {% if user.username != "admin" %}
         <div class="flex-none">
             <!-- <a href="{% url 'postadd' %}" class="btn btn-ghost normal-case text-3xl">
         <i class="fa-solid fa-camera-retro"></i>
