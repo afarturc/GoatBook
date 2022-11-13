@@ -1,6 +1,6 @@
 # TPW Project
 
-## Análise de Requesitos
+## Análise de Requisitos
 - Autenticação
 	- Caso esteja autenticado o user vai ter uma home
 	- Caso não esteja autenticado o utilizador consegue ver à msm a página default (home)

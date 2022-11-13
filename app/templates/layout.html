@@ -13,7 +13,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
-<body>
+<body class="flex flex-col min-h-screen">
 <!--NAVBAR-->
 <!-- <div class="navbar bg-base-100 drop-shadow-md mb-2 z-50 fixed py-2"> -->
 <div class="navbar bg-base-100 drop-shadow-md mb-2">
@@ -60,7 +60,11 @@
     {% block content %}
     {% endblock %}
 </div>
-
+<footer class="footer footer-center p-4 text-base-content mt-auto">
+    <div>
+        <p>Copyright © 2022 - Made with 💙 by <span class="text-primary font-bold"> Stepfamily lda.</span></p>
+    </div>
+</footer>
 {% include "modal.html" %}
 </body>
 
