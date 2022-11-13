@@ -104,12 +104,9 @@ def postadd(request):
             if caption and photo:
                 Post.objects.create(user=utilizador, image=photo, caption=caption)
                 return redirect("home")
-
+            
         else:
-                ctx = {
-                    "user": utilizador
-                }
-                return render(request, "home.html", ctx)
+                return redirect("home")
     else:
         return redirect("login")
 
