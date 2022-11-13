@@ -69,11 +69,11 @@
                 },
                 success: function (json) {
                     if (json['type'] === 'like') {
-                        document.getElementById("count_" + post_id).innerHTML = json['result'];
                         document.getElementById("btn_" + post_id).innerHTML = '<i class="fa-solid fa-heart fa-lg"></i>';
-                    } else {
                         document.getElementById("count_" + post_id).innerHTML = json['result'];
+                    } else {
                         document.getElementById("btn_" + post_id).innerHTML = '<i class="fa-regular fa-heart fa-lg"></i>';
+                        document.getElementById("count_" + post_id).innerHTML = json['result'];
                     }
                     console.log(json)
                 }
