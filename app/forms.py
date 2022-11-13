@@ -45,7 +45,7 @@ class FormLogin(forms.Form):
                 'name': 'password',}))
 
 
-
+# *** This is the form for the user to edit a post***
 class EditPostForm(forms.Form):
     caption = forms.CharField(max_length=256, widget=forms.TextInput(
         attrs={
@@ -61,7 +61,7 @@ class EditPostForm(forms.Form):
             "name": "image",
     }))
 
-#COMMENT
+# *** This is the form for the user to add a comment ***
 class CommentForm(forms.Form):
     comment = forms.CharField(max_length=256 ,widget=forms.TextInput(
         attrs={
@@ -71,6 +71,7 @@ class CommentForm(forms.Form):
             "name": "comment",
     }))
 
+# *** This is the form for the user to edit a image profile ***
 class ImageForm(forms.Form):
     image = forms.ImageField(widget=forms.FileInput(
         attrs={
@@ -79,6 +80,7 @@ class ImageForm(forms.Form):
             "name": "image",
     }))
 
+# *** This is the form for the user to edit a password profile ***
 class PasswordForm(forms.Form):
     old_password = forms.CharField(max_length=256, widget=forms.PasswordInput(
         attrs={
@@ -104,6 +106,7 @@ class PasswordForm(forms.Form):
             "name": "password_confirm",
     }))
 
+# *** This is the form for the user to edit a bio profile ***
 class BioForm(forms.Form):
     bio = forms.CharField(max_length=256, widget=forms.Textarea(
         attrs={

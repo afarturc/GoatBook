@@ -2,23 +2,39 @@
 
 {% block content %}
 
-
+<h>Profile {{ user_posts.username }}</h>
 
 {% for post in posts %}
-  <a href="/post/{{ post.id }}">
-    <div class="card w-1/2 bg-base-100 shadow-2xl mx-auto mb-4">
-      <img src="{{ post.image.url }}"/>
-      <div class="card-body">
-        <h2 class="card-title">{{post.caption}}</h2>
-        <small>{{ post.date|timesince }}</small>
-        <small>Comentários: {{ post.comment_count }}</small>
-        <small>likes: {{ post.like_count }}</small>
-        <div class="card-actions justify-end">
-          <button class="btn btn-outline btn-error"><i class="fa-regular fa-heart fa-lg"></i></button>
-        </div>
-      </div>
+    <div class="card w-3/4 bg-base-100 shadow-2xl mx-auto mb-4">
+        <a href="/post/{{ post.id }}">
+            <img src={{ post.image.url }}/>
+            <div class="card-body">
+                <h2 class="card-title text-4xl">{{ post.caption }}</h2>
+
+                <div class="flex items-center justify-between">
+                    <small class="font-light"> {{ post.date|timesince }}</small>
+{#                                <small>likes: <span id="count_{{ post.id }}">{{ post.like_count }}</span></small>#}
+
+                    <div class="card-actions justify-end">
+                        <label class="btn btn-circle btn-outline btn-primary w-24">
+                            <i class="fa-solid fa-comment fa-lg"></i>
+                            <span class="pl-2">{{ post.comment_count }}</span>
+                        </label>
+                            <button class="btn btn-outline btn-error btn-like w-24" value="{{ post.id }}" id="btn_{{ post.id }}">
+                                {% if user in post.likes.all  %}
+                                    <i class="fa-solid fa-heart fa-lg"></i>
+                                {% else %}
+                                    <i class="fa-regular fa-heart fa-lg"></i>
+                                {% endif %}
+                                <span id="count_{{ post.id }}" class="pl-2">{{ post.like_count }}</span>
+                            </button>
+                    </label>
+
+                    </div>
+                </div>
+            </div>
+        </a>
     </div>
-  </a>
 {% endfor %}
 
 {% endblock %}

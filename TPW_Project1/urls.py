@@ -29,7 +29,7 @@ urlpatterns = [
     path("signup/", views.signup, name="signup"),
     path("login/", views.login, name="login"),
     path("profile/", views.profile, name="profile"),
-    path("profile/<str:username>", views.profileUtilizador, name="profile"),
+    path("profile/<str:username>/", views.profileUtilizador, name="profileUtilizador"),
     path("profile/<str:username>/edit", views.editProfile, name="editProfile"),
 
     path("postadd/", views.postadd, name="postadd"),

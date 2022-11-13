@@ -137,12 +137,14 @@ def postdetail(request, _id):
     else:
         return render(request, "postdetail.html", ctx)
 
+#*Done
 def postlike(request, _id):
     if request.user.is_authenticated and request.user.username!="admin":
         return redirect("postdetail", _id)
     else:
         return redirect("login")
 
+#*Done
 def postcomment(request, _id):
     if request.user.is_authenticated and request.user.username!="admin":
         redirect("postdetail", _id)
@@ -151,7 +153,6 @@ def postcomment(request, _id):
 
 def profile(request):
     if request.user.is_authenticated and request.user.username!="admin":
-        print("User is authenticated")
         user = get_object_or_404(Utilizador, username=request.user.username)
         try:
             posts = Post.objects.filter(user=user).order_by("-date")
@@ -160,6 +161,7 @@ def profile(request):
 
         ctx = {
             "user": user,
+            "user_posts": user,
             "posts": posts,
             #"num_followers": Follow.objects.filter(followed=user).count(),
             #"num_following": Follow.objects.filter(follower=user).count(),
@@ -170,22 +172,24 @@ def profile(request):
         return redirect("login")
 
 def profileUtilizador(request,username):
+    user_posts = get_object_or_404(Utilizador, username=username)
+    user = get_object_or_404(Utilizador, username=request.user.username)
     try:
-        user = get_object_or_404(Utilizador, username=username)
-        posts = Post.objects.filter(user=user).order_by("-date")
+        posts = Post.objects.filter(user=user_posts).order_by("-date")
     except ObjectDoesNotExist:
         posts = []
 
     ctx = {
-        "user": user,
+        "user_posts": user_posts,
         "posts": posts,
+        "user": user,
         #"num_followers": Follow.objects.filter(followed=user).count(),
         #"num_following": Follow.objects.filter(follower=user).count(),
     }
 
     return render(request, "profile.html", ctx)
 
-
+#*Done
 def editProfile(request, username):
     if request.user.is_authenticated and request.user.username!="admin":
         if request.user.username != username:
