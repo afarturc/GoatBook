@@ -7,7 +7,7 @@ from django.http import JsonResponse
 
 
 # Create your views here.
-# Done
+# *Done
 def home(request):
     if request.user.is_authenticated and request.user.username!="admin":
         ctx = {
@@ -26,7 +26,7 @@ def home(request):
         }
         return render(request, "home.html", ctx)
 
-# Done
+# *Done
 def logout(request):
     if request.user.is_authenticated and request.user.username!="admin":
         auth.logout(request)
@@ -34,7 +34,7 @@ def logout(request):
     else:
         return redirect("login")
 
-# Done
+
 def signup(request):
     if request.user.is_authenticated and request.user.username!="admin":
         return redirect("home")
@@ -76,7 +76,6 @@ def signup(request):
         else:
             return render(request, "signup.html", {"messages": ""})
 
-# Done
 def login(request):
     if request.user.is_authenticated and request.user.username!="admin":
         return redirect("home")
@@ -93,11 +92,11 @@ def login(request):
         else:
             return render(request, "login.html", {"messages": ""})
         
-# Done
+# *Done
 def postadd(request):
     if request.user.is_authenticated and request.user.username!="admin":
         utilizador = get_object_or_404(Utilizador, username=request.user.username)
-        if request.method == "POST":
+        if request.method == "POST" and request.FILES:
             caption = request.POST["caption"]
             photo = request.FILES["photo"]
 

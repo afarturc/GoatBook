@@ -1,20 +1,4 @@
 from django import forms
-#POST
-class PostForm(forms.Form):
-    caption = forms.CharField(max_length=256, widget=forms.TextInput(
-        attrs={
-            "class": "input input-bordered w-full", 
-            "placeholder": "Caption", 
-            "id": "caption", 
-            "name": "caption"
-    }))
-    image = forms.ImageField(widget=forms.FileInput(
-        attrs={
-            "class": "file-input file-input-bordered file-input-primary w-full",
-            "id": "photo",
-            "name": "photo"
-    }))
-
 
 class EditPostForm(forms.Form):
     caption = forms.CharField(max_length=256, widget=forms.TextInput(
