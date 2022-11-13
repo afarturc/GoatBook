@@ -19,6 +19,23 @@
                         </button>
                     </div>
                 {% endif %}
+                {% if user.username == post.user.username %}
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                                <text>...</text>
+
+                        </label>
+                        <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                            <li>
+                                <a href={% url 'deletepost' post.id %}>
+                                    Delete
+                                </a>
+                            </li>
+                            <li><a href={% url 'edit' post.id %}>Edit</a></li>
+                        </ul>
+                    </div>
+
+                {% endif %}
             </div>
         </div>
         <img class="w-full xl:w-1/2 mx-auto" src="{{ post.image.url }}" alt="post"/>

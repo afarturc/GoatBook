@@ -18,8 +18,11 @@
                 </div>
                 <div class="form-group pt-4">
                     <input class="btn btn-primary" type="submit" value="Update Post">
+                    <a href="{% url 'deletepost' post.id %}" class="btn btn-primary">Delete post</a>
+                    <a href="{% url 'postdetail' post.id %}" class="btn btn-primary">Cancelar</a>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
@@ -28,7 +31,7 @@
 <script type="text/javascript" >
     $(document).ready(function(){
         $("#caption").attr('value', '{{ post.caption }}');
-        $("#image").attr('value', '{{ post.image.url }}');
+        $("#image").attr('value', '{{ post.image}}');
     });
 </script>
 

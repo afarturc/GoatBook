@@ -110,6 +110,7 @@ def postadd(request):
     else:
         return redirect("login")
 
+#*Done
 def postdetail(request, _id):
     post = get_object_or_404(Post, id=_id)
     ctx = {
@@ -184,7 +185,7 @@ def profileUtilizador(request,username):
 
     return render(request, "profile.html", ctx)
 
-#Done
+
 def editProfile(request, username):
     if request.user.is_authenticated and request.user.username!="admin":
         if request.user.username != username:
@@ -243,6 +244,7 @@ def editProfile(request, username):
     else:
         return redirect("login")
 
+# *Done
 def postdelete(request, _id):
     post = get_object_or_404(Post, id=_id)
     if request.user.is_authenticated and request.user.username!="admin":
@@ -253,9 +255,8 @@ def postdelete(request, _id):
             return redirect("postdetail", _id)
     else:
         return redirect("login")
-
+# *done
 def commentdelete(request,_id, _id_comment):
-    print("commentdelete")
     post = get_object_or_404(Post, id=_id)
     comment = get_object_or_404(Comment, id=_id_comment)
     if request.user.is_authenticated and request.user.username!="admin":
