@@ -1,82 +1,97 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="lg:flex justify-center lg:space-x-10 lg:space-y-0 space-y-5">
-  <div class="space-y-5 flex-shrink-0 lg:w-7/12">
-    {% for post in posts %}
-      <a href="/post/{{ post.id }}">
-        <div class="card w-1/2 bg-base-100 shadow-2xl mx-auto mb-4">
-          <img src={{ post.image.url }} />
-          <div class="card-body">
-            <h2 class="card-title">{{post.caption}}</h2>
-            <small>{{ post.date }}</small>
-            <small>Comentários: {{ post.comment_count }}</small>
-            <small>likes: <span id="count_{{post.id}}">{{ post.like_count }}</span></small>
-            <div class="card-actions justify-end">
-              {%if user in post.likes.all %}
-                <button class="btn btn-outline btn-error btn-like" value="{{post.id}}" id="btn_{{post.id}}"><i class="fa-solid fa-heart fa-lg"></i></button>
-              {% else %}
-                <button class="btn btn-outline btn-error btn-like" value="{{post.id}}" id="btn_{{post.id}}"><i class="fa-regular fa-heart fa-lg"></i></button>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-      </a>
-    {% endfor %}
+    <div class="lg:flex justify-center lg:space-x-10 lg:space-y-0 space-y-5">
+        <div class="space-y-5 flex-shrink-0 lg:w-7/12">
+            {% for post in posts %}
+                <div class="card w-3/4 bg-base-100 shadow-2xl mx-auto mb-4">
+                    <a href="/post/{{ post.id }}">
+                        <img src={{ post.image.url }}/>
+                        <div class="card-body">
+                            <h2 class="card-title text-4xl">{{ post.caption }}</h2>
 
-    {% if friend %}
-      <div class="lg:w-5/12">
-        <div class="bg-white  shadow-md rounded-md overflow-hidden">
-          <div class="bg-gray-50  border-b border-gray-100 flex items-baseline justify-between py-4 px-6 ">
-            <h2 class="font-semibold text-lg">Users You Can Follow</h2>
-            <a href="#"> Refresh</a>
-          </div>
-          {% for x in new_users %}
-            <div class="divide-gray-300 divide-gray-50 divide-opacity-50 divide-y px-4 ">
-              <div class="flex items-center justify-between py-3">
-                <div class="flex flex-1 items-center space-x-4">
-                  <a href="profile.html">
-                      <img src= {{ x.profile_pic.url }} class="bg-gray-200 rounded-full w-10 h-10">
-                  </a>
-                  <div class="flex flex-col">
-                    <span class="block capitalize font-semibold"> tomi_ml </span>
-                    <span class="block capitalize text-sm"> 320k followers </span>
-                  </div>
+                            <div class="flex items-center justify-between">
+                                <small class="font-light">{{ post.date }}</small>
+{#                                <small>likes: <span id="count_{{ post.id }}">{{ post.like_count }}</span></small>#}
+
+                                <div class="card-actions justify-end">
+                                    <label class="btn btn-circle btn-outline btn-primary w-24">
+                                        <i class="fa-solid fa-comment fa-lg"></i>
+                                        <span class="pl-2">{{ post.comment_count }}</span>
+                                    </label>
+                                    <button class="btn btn-outline btn-error btn-like w-24" value="{{ post.id }}"
+                                            id="btn_{{ post.id }}">
+                                        {% if user in post.likes.all %}
+                                            <i class="fa-solid fa-heart fa-lg"></i>
+                                        {% else %}
+                                            <i class="fa-regular fa-heart fa-lg"></i>
+                                        {% endif %}
+                                        <span id="count_{{ post.id }}" class="pl-2">{{ post.like_count }}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-                <button class="btn btn-primary">Follow</button>
-              </div> 
-            </div> 
-          {% endfor %}
-        </div>
-      </div>
-    {% endif %}
-  </div>
-</div>
-<script>
-  $(document).on('click', '.btn-like', function(e) {
-    e.preventDefault();
-    var post_id = $(this).val();
+            {% endfor %}
 
-    $.ajax({
-      url: '{% url "like_post" %}',
-      type: 'POST',
-      data: {
-        'user_id': {{ user.id }},
-        'post_id': post_id,
-        'csrfmiddlewaretoken': '{{ csrf_token }}',
-        'action': 'post'
-      },
-      success: function(json) {
-        if (json['type'] == 'like'){
-          document.getElementById("count_" + post_id).innerHTML = json['result'];
-          document.getElementById("btn_" + post_id).innerHTML = '<i class="fa-solid fa-heart fa-lg"></i>';
-        } else {
-          document.getElementById("count_" + post_id).innerHTML = json['result'];
-          document.getElementById("btn_" + post_id).innerHTML = '<i class="fa-regular fa-heart fa-lg"></i>';
-        }
-        console.log(json)
-      }
-    });
-  });
-</script>
+            {#            <!-- Friends -->#}
+            {#            {% if friend %}#}
+            {#                <div class="lg:w-5/12">#}
+            {#                    <div class="bg-white  shadow-md rounded-md overflow-hidden">#}
+            {#                        <div class="bg-gray-50  border-b border-gray-100 flex items-baseline justify-between py-4 px-6 ">#}
+            {#                            <h2 class="font-semibold text-lg">Users You Can Follow</h2>#}
+            {#                            <a href="#"> Refresh</a>#}
+            {#                        </div>#}
+            {#                        {% for x in new_users %}#}
+            {#                            <div class="divide-gray-300 divide-gray-50 divide-opacity-50 divide-y px-4 ">#}
+            {#                                <div class="flex items-center justify-between py-3">#}
+            {#                                    <div class="flex flex-1 items-center space-x-4">#}
+            {#                                        <a href="profile.html">#}
+            {#                                            <img src="{{ x.profile_pic.url }}"#}
+            {#                                                 class="bg-gray-200 rounded-full w-10 h-10">#}
+            {#                                        </a>#}
+            {#                                        <div class="flex flex-col">#}
+            {#                                            <span class="block capitalize font-semibold"> tomi_ml </span>#}
+            {#                                            <span class="block capitalize text-sm"> 320k followers </span>#}
+            {#                                        </div>#}
+            {#                                    </div>#}
+            {#                                    <button class="btn btn-primary">Follow</button>#}
+            {#                                </div>#}
+            {#                            </div>#}
+            {#                        {% endfor %}#}
+            {#                    </div>#}
+            {#                </div>#}
+            {#            {% endif %}#}
+            {#            <!-- End Friends -->#}
+
+        </div>
+    </div>
+    <script>
+        $(document).on('click', '.btn-like', function (e) {
+            e.preventDefault();
+            var post_id = $(this).val();
+
+            $.ajax({
+                url: '{% url "like_post" %}',
+                type: 'POST',
+                data: {
+                    'user_id': {{ user.id }},
+                    'post_id': post_id,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'action': 'post'
+                },
+                success: function (json) {
+                    if (json['type'] == 'like') {
+                        document.getElementById("count_" + post_id).innerHTML = json['result'];
+                        document.getElementById("btn_" + post_id).innerHTML = '<i class="fa-solid fa-heart fa-lg"></i>';
+                    } else {
+                        document.getElementById("count_" + post_id).innerHTML = json['result'];
+                        document.getElementById("btn_" + post_id).innerHTML = '<i class="fa-regular fa-heart fa-lg"></i>';
+                    }
+                    console.log(json)
+                }
+            });
+        });
+    </script>
 {% endblock %}

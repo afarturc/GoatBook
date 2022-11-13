@@ -1,11 +1,10 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    
-<div class="container mx-auto">
-    <div class="flex flex-col gap-4 place-items-center">
-        <div class="w-1/4">
-            <form action="" method="post" enctype="multipart/form-data">
+
+    <div class="container mx-auto">
+        <div class="flex flex-col gap-4 place-items-center">
+            <form action="" method="post" enctype="multipart/form-data" class="w-1/2">
                 {% csrf_token %}
                 <div class="form-group py-4">
                     <h5 class="font-semibold">Profile picture</h5>
@@ -17,9 +16,7 @@
                     <input class="btn btn-primary" type="submit" value="Update Picture">
                 </div>
             </form>
-        </div>
-        <div class="w-1/4">
-            <form action="" method="post">
+            <form action="" method="post" class="w-1/2">
                 {% csrf_token %}
                 <h5 class="font-semibold">Bio</h5>
                 <div class="form-group py-4">
@@ -29,9 +26,8 @@
                     <input class="btn btn-primary" type="submit" value="Update Bio">
                 </div>
             </form>
-        </div>
-        <div class="w-1/4">
-            <form action="" method="post">
+
+            <form action="" method="post" class="w-1/2">
                 {% csrf_token %}
                 <div class="form-group py-4">
                     <h5 class="font-semibold">Password</h5>
@@ -45,21 +41,20 @@
                         {{ formPassword.password_confirm }}
                     </div>
                 </div>
-                    <div class="form-group pt-4">
-                        <input class="btn btn-primary" type="submit" value="Change Password">
-                    </div>
+                <div class="form-group pt-4">
+                    <input class="btn btn-primary" type="submit" value="Change Password">
+                </div>
             </form>
         </div>
     </div>
-</div>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript" >
-    $(document).ready(function(){
-        $("#bio").attr('value', '{{ user.bio }}');
-        $("#image").attr('value', '{{ user.image.url }}');
-    });
-</script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#bio").attr('value', '{{ user.bio }}');
+            $("#image").attr('value', '{{ user.image.url }}');
+        });
+    </script>
 
 
 {% endblock %}

@@ -4,87 +4,90 @@
 <html lang="en" data-theme="cupcake">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Goatbook - Home of the best 🐐</title>
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@2.38.1/dist/full.css" rel="stylesheet" type="text/css" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://kit.fontawesome.com/97a6e4f33c.js" crossorigin="anonymous"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Goatbook - Home of the best 🐐</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.38.1/dist/full.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/97a6e4f33c.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <body>
-  <!--NAVBAR-->
-  <!-- <div class="navbar bg-base-100 drop-shadow-md mb-2 z-50 fixed py-2"> -->
-  <div class="navbar bg-base-100 drop-shadow-md mb-2">
+<!--NAVBAR-->
+<!-- <div class="navbar bg-base-100 drop-shadow-md mb-2 z-50 fixed py-2"> -->
+<div class="navbar bg-base-100 drop-shadow-md mb-2">
     <div class="flex-1">
-      <a href="/" class="btn btn-ghost normal-case text-3xl">🐐 Book</a>
+        <a href="/" class="btn btn-ghost normal-case text-3xl">🐐 Book</a>
     </div>
     {% if user.username %}
-    <div class="flex-none">
-      <!-- <a href="{% url 'postadd' %}" class="btn btn-ghost normal-case text-3xl">
+        <div class="flex-none">
+            <!-- <a href="{% url 'postadd' %}" class="btn btn-ghost normal-case text-3xl">
         <i class="fa-solid fa-camera-retro"></i>
       </a> -->
-      <a href="#post-modal" class="btn btn-primary"><i class="fa-solid fa-plus fa-2xl"></i><span
-          class="pl-2">Post</span></a>
+            <label for="my-modal-4" class="btn btn-primary"><i class="fa-solid fa-plus fa-2xl"></i><span
+                    class="pl-2">Post</span></label>
+        </div>
+        <div class="flex-none">
+        <div class="dropdown dropdown-end">
+            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                <div class="w-10 rounded-full">
+                    <img src="{{ user.profile_pic.url }}" alt=""/>
+                </div>
+            </label>
+            <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                <li>
+                    <a href={% url 'profile' %}>
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <a class="justify-between" href="/profile/{{ user.username }}/edit">
+                        Settings
+                    </a>
+                <li><a href={% url 'logout' %}>Logout</a></li>
+            </ul>
+        </div>
+    {% else %}
+        <div class="flex-none">
+            <a href="{% url 'login' %}" class="btn btn-ghost normal-case text-3xl">Login</a>
+        </div>
+    {% endif %}
     </div>
-    <div class="flex-none">
-      <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-          <div class="w-10 rounded-full">
-            <img src="{{user.profile_pic.url}}" />
-          </div>
-        </label>
-        <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-          <li>
-            <a href={% url 'profile' %} class="justify-between">
-              Profile
-            </a>
-          </li>
-          <li>
-            <a class="justify-between" href="/profile/{{user.username}}/edit">
-              Settings
-            </a>
-          <li><a href={% url 'logout' %}>Logout</a></li>
-        </ul>
-      </div>
-      {% else %}
-      <div class="flex-none">
-        <a href="{% url 'login' %}" class="btn btn-ghost normal-case text-3xl">Login</a>
-      </div>
-      {% endif %}
-    </div>
-  </div>
-  <!--/NAVBAR-->
-  <div class="container mx-auto flex-1 flex-row">
+</div>
+<!--/NAVBAR-->
+<div class="container mx-auto flex-1 flex-row">
     {% block content %}
     {% endblock %}
-  </div>
+</div>
 
-  <div class="modal modal-bottom sm:modal-middle" id="post-modal">
-    <div class="modal-box">
-      <form action="." method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <p class="mx-auto text-3xl font-bold mb-6 tracking-wider">New Post</p>
-        <div class="form-control w-full">
-          <label class="label">
-            <span class="label-text font-bold">Caption</span>
-          </label>
-          <input type="input" placeholder="Caption" class="input input-bordered w-full" name="caption" id="caption" />
-        </div>
+<input type="checkbox" id="my-modal-4" class="modal-toggle" />
+<label for="my-modal-4" class="modal cursor-pointer">
+    <label class="modal-box relative" for="">
+        <form action="." method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p class="mx-auto text-3xl font-bold mb-6 tracking-wider">New Post</p>
+            <div class="form-control w-full">
+                <label class="label">
+                    <span class="label-text font-bold">Caption</span>
+                </label>
+                <input type="text" placeholder="Caption" class="input input-bordered w-full" name="caption"
+                       id="caption"/>
+            </div>
 
-        <div class=" form-control">
-          <label class="label">
-            <span class="label-text font-bold">Image</span>
-          </label>
-          <input type="file" class="file-input file-input-bordered file-input-primary w-full" name="photo" id="photo" />
-        </div>
-        <div class="pt-4">
-          <button class="btn btn-active btn-primary btn-wide w-full" type="submit">Sign in</button>
-        </div>
-      </form>
-    </div>
-  </div>
+            <div class=" form-control">
+                <label class="label">
+                    <span class="label-text font-bold">Image</span>
+                </label>
+                <input type="file" class="file-input file-input-bordered file-input-primary w-full" name="photo"
+                       id="photo"/>
+            </div>
+            <div class="pt-4">
+                <button class="btn btn-active btn-primary btn-wide w-full" type="submit">Sign in</button>
+            </div>
+        </form>
+    </label>
+</label>
 </body>
 
 </html>
