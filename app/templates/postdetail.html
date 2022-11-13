@@ -5,7 +5,7 @@
         <div class="flex flex-row justify-between items-center pt-5">
             <div>
                 <p class="text-4xl font-bold">{{ post.caption }}</p>
-                <p class="font-extralight">{{ post.date }}</p>
+                <p class="font-extralight">{{ post.date|timesince }}</p>
             </div>
             <div class="flex flex-wrap">
                 {% if exist_like %}
@@ -28,7 +28,7 @@
         </div>
 
         <div class="overflow-x-auto xl:w-1/2 w-full">
-            {% if user %}
+            {% if user.username or user.username != "admin" %}
                 <form action="." method="POST">
                     {% csrf_token %}
                     <div class="form-control">

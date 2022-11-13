@@ -9,11 +9,11 @@
 []editar post 
 []remover post
 
-[]adicionar comment
+[x]adicionar comment
 []remover comment (quem fez o post e quem comentou)
 
-[]adicionar like
-[]remover like 
+[x]adicionar like
+[x]remover like 
 
 []search 
 

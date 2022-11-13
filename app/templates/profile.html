@@ -10,7 +10,7 @@
       <img src="{{ post.image.url }}"/>
       <div class="card-body">
         <h2 class="card-title">{{post.caption}}</h2>
-        <small>{{post.date}}</small>
+        <small>{{ post.date|timesince }}</small>
         <small>Comentários: {{ post.comment_count }}</small>
         <small>likes: {{ post.like_count }}</small>
         <div class="card-actions justify-end">
