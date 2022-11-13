@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
 from app.models import Post, Utilizador, Comment
-from app.forms import FormSingup, CommentForm, ImageForm, PasswordForm, BioForm
+from app.forms import FormSingup, FormLogin, CommentForm, ImageForm, PasswordForm, BioForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 
@@ -49,20 +49,16 @@ def signup(request):
 
                 if password == confirmation:
                     if User.objects.filter(username=username).exists() or Utilizador.objects.filter(username=username).exists():
-                        print("Username already exists")
                         return render(request, "signup.html", {"messages": "Username already exists." , "formSignup": formSignup})
                     elif User.objects.filter(email=email).exists() or Utilizador.objects.filter(email=email).exists():
-                        print("Email already exists.")
                         return render(request, "signup.html", {"messages": "Email already exists.", "formSignup": formSignup})
                     elif request.FILES:
-                        print("entrou")
                         photo = request.FILES["photo"]
                         User.objects.create_user(username=username, email=email, password=password)
                         Utilizador.objects.create(username=username, email=email, password=password, profile_pic=photo)
                         auth.login(request, User.objects.get(username=username))
                         return redirect("home")
                     else:
-                        print("Erro")
                         user = User.objects.create_user(username=username, password=password, email=email)
                         user.save()
                         Utilizador.objects.create(username=username, email=email, password=password)
@@ -70,31 +66,32 @@ def signup(request):
                         return redirect("home")
                     
                 else:
-                    print("Passwords don't match.")
                     return render(request, "signup.html", {"messages": "Passwords do not match.", "formSignup": formSignup})
             else:
-                print("Invalid form.")
                 return render(request, "signup.html", {"messages": "Invalid credentials.", "formSignup": formSignup})
         else:
-            print("GET")
             return render(request, "signup.html", {"messages": "", "formSignup": FormSingup()})
         
-
+# *Done
 def login(request):
     if request.user.is_authenticated and request.user.username!="admin":
         return redirect("home")
     else:
         if request.method == "POST":
-            username = request.POST["username"]
-            password = request.POST["password"]
-            user = auth.authenticate(username=username, password=password)
-            if user is not None:
-                auth.login(request, user)
-                return redirect("home")
+            formLogin = FormLogin(request.POST)
+            if formLogin.is_valid():
+                username = formLogin.cleaned_data["username"]
+                password = formLogin.cleaned_data["password"]
+                user = auth.authenticate(username=username, password=password)
+                if user is not None:
+                    auth.login(request, user)
+                    return redirect("home")
+                else:
+                    return render(request, "login.html", {"messages": "Invalid credentials.", "formLogin": formLogin})
             else:
-                return render(request, "login.html", {"messages": "Invalid credentials."})
+                return render(request, "login.html", {"messages": "Invalid credentials.", "formLogin": formLogin})
         else:
-            return render(request, "login.html", {"messages": ""})
+            return render(request, "login.html", {"messages": "", "formLogin": FormLogin()})
         
 # *Done
 def postadd(request):

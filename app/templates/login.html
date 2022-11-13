@@ -15,16 +15,18 @@
             <div class="form-control mb-4">
                 <label class="input-group w-full input-group-lg">
                     <span class="w-1/4">Username</span>
-                    <input type="text" placeholder="bobross" class="input input-bordered w-3/4" name="username"
-                        id="username" />
+                    <!-- <input type="text" placeholder="bobross" class="input input-bordered w-3/4" name="username"
+                        id="username" /> -->
+                        {{ formLogin.username }}
                 </label>
             </div>
 
             <div class="mb-4">
                 <label class="input-group w-full input-group-lg">
                     <span class="w-1/4">Password </span>
-                    <input type="password" placeholder="********" class="input input-bordered w-3/4" name="password"
-                        id="password" />
+                    <!-- <input type="password" placeholder="********" class="input input-bordered w-3/4" name="password"
+                        id="password" /> -->
+                        {{ formLogin.password }}
                 </label>
             </div>
 

@@ -1,7 +1,7 @@
 [x]Home 
-[]login
+[x]login
 [x]logout
-[]criar nova conta
+[x]criar nova conta
 []profile
 []editar perfil
 

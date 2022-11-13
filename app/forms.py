@@ -1,5 +1,6 @@
 from django import forms
 
+# *** This is the form for the user to register ***
 class FormSingup(forms.Form):
     username = forms.CharField( widget=forms.TextInput(
         attrs={'class': 'input input-bordered w-full',
@@ -30,6 +31,18 @@ class FormSingup(forms.Form):
                 'id': 'photo',
                 'name': 'photo',}))
 
+# *** This is the form for the user to login ***
+class FormLogin(forms.Form):
+    username = forms.CharField( widget=forms.TextInput(
+        attrs={'class': 'input input-bordered w-3/4',
+                'placeholder': 'bobross',
+                'id': 'username',
+                'name': 'username',}))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={'class': 'input input-bordered w-3/4',
+                'placeholder': '********',
+                'id': 'password',
+                'name': 'password',}))
 
 
 
