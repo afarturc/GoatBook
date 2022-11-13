@@ -2,8 +2,8 @@
 
 {% block content %}
 
-<p>Profile {{ user_posts.username }}</p>
-<p>Profile {{ user.username }}</p>
+{% comment %} <p>Profile {{ user_posts.username }}</p>
+<p>Profile {{ user.username }}</p> {% endcomment %}
 
 {% if user_posts.username != user.username %}
     <div class="card-actions justify-end">
@@ -55,24 +55,24 @@
 <script>
     $(document).on('click', '.btn-like', function (e) {
         e.preventDefault();
-        var user_profile_id = $(this).val();
+        var post_id = $(this).val();
 
         $.ajax({
-            url: '{% url "follow" %}',
+            url: '{% url "like_post" %}',
             type: 'POST',
             data: {
                 'user_id': {{ user.id }},
-                'user_profile': user_profile_id,
+                'post_id': post_id,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'action': 'post'
             },
             success: function (json) {
-                if (json['type'] === 'like') {
-                    document.getElementById("btn_" + user_profile_id).innerHTML = '<i class="fa-solid fa-heart fa-lg"></i>';
-                    document.getElementById("count_" + user_profile_id).innerHTML = json['like_count'];
+                if (json['type'] == 'like') {
+                    var button = document.getElementById('btn_' + post_id);
+                    button.innerHTML = '<i class="fa-solid fa-heart fa-lg"></i><span class="pl-2">' + json['result'] + '</span>';
                 } else {
-                    document.getElementById("btn_" + user_profile_id).innerHTML = '<i class="fa-regular fa-heart fa-lg"></i>';
-                    document.getElementById("count_" + user_profile_id).innerHTML = json['like_count'];
+                    var button = document.getElementById('btn_' + post_id);
+                    button.innerHTML = '<i class="fa-regular fa-heart fa-lg"></i><span class="pl-2">' + json['result'] + '</span>';
                 }
                 console.log(json)
             }
