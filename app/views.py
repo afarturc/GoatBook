@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
 from app.models import Post, Utilizador, Comment
-from app.forms import FormSingup, FormLogin, CommentForm, ImageForm, PasswordForm, BioForm
+from app.forms import FormSingup, FormLogin, CommentForm, ImageForm, PasswordForm, BioForm, EditPostForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 
@@ -255,10 +255,11 @@ def postdelete(request, _id):
         return redirect("login")
 
 def commentdelete(request,_id, _id_comment):
+    print("commentdelete")
     post = get_object_or_404(Post, id=_id)
     comment = get_object_or_404(Comment, id=_id_comment)
     if request.user.is_authenticated and request.user.username!="admin":
-        if request.user.username == comment.user.username:
+        if request.user.username == comment.user.username or request.user.username == post.user.username:
             post.remove_comment()
             comment.delete()
             return redirect("postdetail", comment.post.id)
@@ -273,11 +274,11 @@ def postedit(request,_id):
         if request.user.username == post.user.username:
             ctx = {
                 "post": post,
-                "form_postedit": PostForm(),
+                "form_postedit": EditPostForm(),
                 "user": Utilizador.objects.get(username=request.user.username),
             }
             if request.method == "POST":
-                form_postedit = PostForm(request.POST, request.FILES)
+                form_postedit = EditPostForm(request.POST, request.FILES)
                 ctx["form_postedit"]=form_postedit
                 if form_postedit.is_valid():
                     caption = form_postedit.cleaned_data["caption"]

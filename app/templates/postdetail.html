@@ -48,6 +48,14 @@
                         </div>
                         <p class="w-full text-justify">{{ comment.comment }}</p>
                     </div>
+                    {% if user.username == comment.user.username or user.username == post.user.username %}
+                        <div class="flex flex-row justify-end">
+                            <form action="{% url 'deletecomment' post.id comment.id %}" method="POST">
+                                {% csrf_token %}
+                                <button class="btn btn-error btn-sm">Deletar</button>
+                            </form>
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
