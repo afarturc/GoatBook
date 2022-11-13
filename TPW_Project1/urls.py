@@ -39,7 +39,7 @@ urlpatterns = [
     path("post/<int:_id>/delete/", views.postdelete, name="deletepost"),
     path("post/<int:_id>/edit/", views.postedit, name="edit"),
     path("like/", views.like, name="like_post"),
-    path("follow/", views.follow, name="follow"),
+    # path("follow/", views.follow, name="follow"),
     
 
     path("post/<int:_id>/comment/<int:_id_comment>/delete/", views.commentdelete, name="deletecomment"),
