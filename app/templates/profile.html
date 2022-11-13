@@ -2,7 +2,21 @@
 
 {% block content %}
 
-<h>Profile {{ user_posts.username }}</h>
+<p>Profile {{ user_posts.username }}</p>
+<p>Profile {{ user.username }}</p>
+
+{% if user_posts.username != user.username %}
+    <div class="card-actions justify-end">
+        <button class="btn btn-outline btn-error btn-like btn-lg" value="{{ post.id }}" id="btn_{{ post.id }}">
+            {% if user in post.likes.all %}
+                <i class="fa-solid fa-heart fa-lg"></i>
+            {% else %}
+                <i class="fa-regular fa-heart fa-lg"></i>
+            {% endif %}
+        </button>
+    </div>
+{% endif %}
+
 
 {% for post in posts %}
     <div class="card w-3/4 bg-base-100 shadow-2xl mx-auto mb-4">
@@ -37,4 +51,32 @@
     </div>
 {% endfor %}
 
+
+<script>
+    $(document).on('click', '.btn-like', function (e) {
+        e.preventDefault();
+        var user_profile_id = $(this).val();
+
+        $.ajax({
+            url: '{% url "follow" %}',
+            type: 'POST',
+            data: {
+                'user_id': {{ user.id }},
+                'user_profile': user_profile_id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'action': 'post'
+            },
+            success: function (json) {
+                if (json['type'] === 'like') {
+                    document.getElementById("btn_" + user_profile_id).innerHTML = '<i class="fa-solid fa-heart fa-lg"></i>';
+                    document.getElementById("count_" + user_profile_id).innerHTML = json['like_count'];
+                } else {
+                    document.getElementById("btn_" + user_profile_id).innerHTML = '<i class="fa-regular fa-heart fa-lg"></i>';
+                    document.getElementById("count_" + user_profile_id).innerHTML = json['like_count'];
+                }
+                console.log(json)
+            }
+        });
+    });
+</script>
 {% endblock %}
