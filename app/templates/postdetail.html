@@ -10,7 +10,7 @@
             <div class="flex flex-wrap">
                 {% if exist_like %}
                     <div class="card-actions justify-end">
-                        <button class="btn btn-outline btn-error btn-like btn-lg" value="{{ post.id }}" id="btn_{{ post.id }}">
+                        <button class="btn btn-outline btn-error btn-like btn-base" value="{{ post.id }}" id="btn_{{ post.id }}">
                             {% if user in post.likes.all %}
                                 <i class="fa-solid fa-heart fa-lg"></i>
                             {% else %}
@@ -21,10 +21,7 @@
                 {% endif %}
                 {% if user.username == post.user.username %}
                     <div class="dropdown dropdown-end">
-                        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-                                <text>...</text>
-
-                        </label>
+                        <label tabindex="0" class="ml-2 btn btn-outline btn-base-300 btn-like btn-base">More</label>
                         <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
                             <li>
                                 <a href={% url 'deletepost' post.id %}>
@@ -57,22 +54,23 @@
                 {% for comment in comments %}
                     <div class="flex space-x-3 items-center space-y-5">
                         <div class="mask mask-squircle w-32">
-                            <img src="{{ comment.user.profile_pic.url }}" alt="Profile Picture"/>
+                            <img src="{{ comment.user.profile_pic.url }}" class="object-contain" alt="Profile Picture"/>
                         </div>
                         <div class="w-28">
                             <div class="font-bold">{{ comment.user.username }}</div>
                             <div class="text-sm opacity-50">{{ comment.date|timesince }}</div>
                         </div>
-                        <p class="w-full text-justify">{{ comment.comment }}</p>
+                        <div class="w-full break-all text-justify">{{ comment.comment }}</div>
+                        {% if user.username == comment.user.username or user.username == post.user.username %}
+                            <div class="flex flex-row justify-end">
+                                <form action="{% url 'deletecomment' post.id comment.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button class="btn btn-error btn-sm"><i class="fa-solid fa-trash"></i></button>
+                                </form>
+                            </div>
+                        {% endif %}
                     </div>
-                    {% if user.username == comment.user.username or user.username == post.user.username %}
-                        <div class="flex flex-row justify-end">
-                            <form action="{% url 'deletecomment' post.id comment.id %}" method="POST">
-                                {% csrf_token %}
-                                <button class="btn btn-error btn-sm">Deletar</button>
-                            </form>
-                        </div>
-                    {% endif %}
+
                 {% endfor %}
             </div>
         </div>
