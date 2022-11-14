@@ -110,7 +110,7 @@ class PasswordForm(forms.Form):
 class BioForm(forms.Form):
     bio = forms.CharField(max_length=256, widget=forms.Textarea(
         attrs={
-            "class": "input input-bordered w-full", 
+            "class": "input input-bordered w-full",
             "placeholder": "Bio",
             "id": "bio",
             "name": "bio",

@@ -22,10 +22,10 @@
                 {% endif %}
 
                 {% if user.username == post.user.username %}
-                    <a class="btn btn-outline btn-warning btn-like btn-base" href={% url 'edit' post.id %}>
+                    <a class="btn btn-outline btn-warning btn-base" href="{% url 'edit' post.id %}">
                         <i class="fa-solid fa-pen"></i>
                     </a>
-                    <a class="btn btn-outline btn-info btn-like btn-base" href={% url 'deletepost' post.id %}>
+                    <a class="btn btn-outline btn-info btn-base" href="{% url 'deletepost' post.id %}">
                         <i class="fa-solid fa-trash"></i>
                     </a>
                 {% endif %}
