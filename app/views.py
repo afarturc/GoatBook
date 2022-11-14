@@ -371,7 +371,6 @@ def search(request):
 
             try:
                 user = Utilizador.objects.get(username=request.user.username)
-                ctx["user"]=user
             except ObjectDoesNotExist:
                 user = None
             
