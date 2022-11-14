@@ -9,8 +9,6 @@ class Utilizador (models.Model):
     bio = models.CharField(max_length=256, blank=True)
     email = models.EmailField(max_length=50)
     profile_pic = models.ImageField(upload_to='profile_pics', blank=True, default= 'default.png')
-    following = models.ManyToManyField("self", blank=True, related_name="followers", default=None)
-    following_count = models.IntegerField(default=0)
     #post_count = models.IntegerField(default=0)
 
     def update_image(self, file):
@@ -20,23 +18,18 @@ class Utilizador (models.Model):
     def update_password(self, password):
         self.password = password
 
-    def remove_follow(self, user):
-        self.following.remove(user)  
-        self.following_count -= 1
-        super().save()
-
-    def add_follow(self, user):
-        self.following.add(user)
-        self.following_count += 1
-        super().save()
-
-    
-
     # def get_post_count(self):
     #     return self.posts.count()
     
     def __str__(self):
         return self.username
+
+class Follow(models.Model):
+    user = models.ForeignKey(Utilizador, on_delete=models.CASCADE, related_name="user")
+    following = models.ForeignKey(Utilizador, on_delete=models.CASCADE, related_name="following")
+
+    def __str__(self):
+        return self.user.username + " follows " + self.following.username
 
 class Post(models.Model):
     user = models.ForeignKey(Utilizador, on_delete=models.CASCADE)

@@ -4,67 +4,28 @@
     <div class="container lg:flex justify-center lg:space-x-10 lg:space-y-0 space-y-5">
         <div class="space-y-5 flex-shrink-0 lg:w-7/12">
 
-{% comment %}
-<p>Profile {{ user_posts.username }}</p>
-<p>Profile {{ user.username }}</p> 
-{% endcomment %}
-
-{% if user_posts.username != user.username %}
-    <div class="card-actions justify-end">
-        <button class="btn btn-outline btn-error btn-follow w-24" value="{{ user_posts.id }}" id="btn_{{ user_posts.id }}">
-            {% if user in user_posts.following.all  %}
-                <i class="fa-solid fa-heart fa-lg"></i>
-            {% else %}
-                <i class="fa-regular fa-heart fa-lg"></i>
-            {% endif %}
-            <span id="count_{{ user_posts.id }}" class="pl-2">{{ user_posts.following_count }}</span>
-        </button>
-    </div>
-{% endif %}
-
-
-{% for post in posts %}
-    <div class="card w-3/4 bg-base-100 shadow-2xl mx-auto mb-4">
-        <a href="/post/{{ post.id }}">
-            <img src={{ post.image.url }}/>
-            <div class="card-body">
-                <h2 class="card-title text-4xl">{{ post.caption }}</h2>
-
-                <div class="flex items-center justify-between">
-                    <small class="font-light"> {{ post.date|timesince }}</small>
-{#                                <small>likes: <span id="count_{{ post.id }}">{{ post.like_count }}</span></small>#}
-
-                    <div class="card-actions justify-end">
-                        <label class="btn btn-circle btn-outline btn-primary w-24">
-                            <i class="fa-solid fa-comment fa-lg"></i>
-                            <span class="pl-2">{{ post.comment_count }}</span>
-                        </label>
-                            <button class="btn btn-outline btn-error btn-like w-24" value="{{ post.id }}" id="btn_{{ post.id }}">
-                                {% if user in post.likes.all  %}
-                                    <i class="fa-solid fa-heart fa-lg"></i>
-                                {% else %}
-                                    <i class="fa-regular fa-heart fa-lg"></i>
-                                {% endif %}
-                                <span id="count_{{ post.id }}" class="pl-2">{{ post.like_count }}</span>
-                            </button>
-                    </label>
-
             <div class="flex items-center justify-between">
                 <div class="flex flex-row">
                     <div class="w-28 mask mask-squircle">
-                        <img src="https://placeimg.com/192/192/people" alt="avatar"/>
+                        <img src="{{ user_posts.profile_pic.url }}" alt="avatar"/>
                     </div>
                     <div class="flex flex-col space-between pl-2">
-                        <p class="font-semibold text-6xl pb-5">{{ user.username }}</p>
+                        <p class="font-semibold text-6xl pb-5">{{ user_posts.username }}</p>
                         <div class="flex flex-row space-x-5">
-                            <p class="text-lg"><span class="font-semibold ">Followers</span> 12</p>
-                            <p class="text-lg"><span class="font-semibold ">Following</span> 24</p>
+                            <p class="text-lg"><span class="font-semibold ">Followers:</span> <span id="followers">{{ followers_count }}</span></p>
+                            <p class="text-lg"><span class="font-semibold ">Following:</span> <span id="following">{{ following_count }}</span></p>
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary">
-                    Follow
-                </button>
+                {% if user != user_posts%}
+                    <button class="btn btn-outline btn-primary btn-follow w-24" value="{{ user_posts.id }}" id="btn_follow">
+                        {% if is_follower %}
+                            Unfollow
+                        {% else %}
+                            Follow
+                        {% endif %}
+                    </button>
+                {% endif %}
             </div>
 
 
@@ -118,37 +79,36 @@
         </div>
     </div>
 
-    <script>
-        $(document).on('click', '.btn-like', function (e) {
-            e.preventDefault();
-            var post_id = $(this).val();
+<script>
+    $(document).on('click', '.btn-like', function (e) {
+        e.preventDefault();
+        var post_id = $(this).val();
 
-            $.ajax({
-                url: '{% url "like_post" %}',
-                type: 'POST',
-                data: {
-                    'user_id': {{ user.id }},
-                    'post_id': post_id,
-                    'csrfmiddlewaretoken': '{{ csrf_token }}',
-                    'action': 'post'
-                },
-                success: function (json) {
-                    if (json['type'] == 'like') {
-                        var button = document.getElementById('btn_' + post_id);
-                        button.innerHTML = '<i class="fa-solid fa-heart fa-lg"></i><span class="pl-2">' + json['result'] + '</span>';
-                    } else {
-                        var button = document.getElementById('btn_' + post_id);
-                        button.innerHTML = '<i class="fa-regular fa-heart fa-lg"></i><span class="pl-2">' + json['result'] + '</span>';
-                    }
-                    console.log(json)
+        $.ajax({
+            url: '{% url "like_post" %}',
+            type: 'POST',
+            data: {
+                'user_id': {{ user.id }},
+                'post_id': post_id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'action': 'post'
+            },
+            success: function (json) {
+                if (json['type'] == 'like') {
+                    var button = document.getElementById('btn_' + post_id);
+                    button.innerHTML = '<i class="fa-solid fa-heart fa-lg"></i><span class="pl-2">' + json['result'] + '</span>';
+                } else {
+                    var button = document.getElementById('btn_' + post_id);
+                    button.innerHTML = '<i class="fa-regular fa-heart fa-lg"></i><span class="pl-2">' + json['result'] + '</span>';
                 }
-            });
+                console.log(json)
+            }
         });
     });
 </script>
 
 <script>
-    $(document).on('click', '.btn-follow', function (e) {
+    $(document).on('click', '#btn_follow', function (e) {
         e.preventDefault();
         var user_posts_id = $(this).val();
 
@@ -163,17 +123,17 @@
             },
             success: function (json) {
                 if (json['type'] == 'follow') {
-                    var button = document.getElementById('btn_' + user_posts_id);
-                    button.innerHTML = '<i class="fa-solid fa-heart fa-lg"></i><span class="pl-2">' + json['result'] + '</span>';
+                    document.getElementById('btn_follow').innerHTML = 'Unfollow';
+                    document.getElementById('following').innerHTML = json['following'];
+                    document.getElementById('followers').innerHTML = json['followers'];
                 } else {
-                    var button = document.getElementById('btn_' + user_posts_id);
-                    button.innerHTML = '<i class="fa-regular fa-heart fa-lg"></i><span class="pl-2">' + json['result'] + '</span>';
+                    document.getElementById('btn_follow').innerHTML = 'Follow';
+                    document.getElementById('following').innerHTML = json['following'];
+                    document.getElementById('followers').innerHTML = json['followers'];
                 }
                 console.log(json)
             }
         });
     });
 </script>
-
-    </script>
 {% endblock %}
