@@ -7,10 +7,11 @@
                 <p class="text-4xl font-bold">{{ post.caption }}</p>
                 <p class="font-extralight">{{ post.date|timesince }} </p>
             </div>
-            <div class="flex flex-wrap">
+            <div class="flex flex-wrap space-x-3">
                 {% if exist_like %}
                     <div class="card-actions justify-end">
-                        <button class="btn btn-outline btn-error btn-like btn-base" value="{{ post.id }}" id="btn_{{ post.id }}">
+                        <button class="btn btn-outline btn-error btn-like btn-base" value="{{ post.id }}"
+                                id="btn_{{ post.id }}">
                             {% if user in post.likes.all %}
                                 <i class="fa-solid fa-heart fa-lg"></i>
                             {% else %}
@@ -19,19 +20,14 @@
                         </button>
                     </div>
                 {% endif %}
-                {% if user.username == post.user.username %}
-                    <div class="dropdown dropdown-end">
-                        <label tabindex="0" class="ml-2 btn btn-outline btn-base-300 btn-like btn-base">More</label>
-                        <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                            <li>
-                                <a href={% url 'deletepost' post.id %}>
-                                    Delete
-                                </a>
-                            </li>
-                            <li><a href={% url 'edit' post.id %}>Edit</a></li>
-                        </ul>
-                    </div>
 
+                {% if user.username == post.user.username %}
+                    <a class="btn btn-outline btn-warning btn-like btn-base" href={% url 'edit' post.id %}>
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <a class="btn btn-outline btn-info btn-like btn-base" href={% url 'deletepost' post.id %}>
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
                 {% endif %}
             </div>
         </div>
@@ -50,7 +46,7 @@
                     </div>
                 </form>
             {% endif %}
-            <div class="w-full flex flex-col">
+            <div class="w-full flex flex-col pt-3">
                 {% for comment in comments %}
                     <div class="flex space-x-3 items-center space-y-5">
                         <div class="mask mask-squircle w-32">
@@ -65,7 +61,7 @@
                             <div class="flex flex-row justify-end">
                                 <form action="{% url 'deletecomment' post.id comment.id %}" method="POST">
                                     {% csrf_token %}
-                                    <button class="btn btn-error btn-sm"><i class="fa-solid fa-trash"></i></button>
+                                    <button class="btn btn-error btn-sm w-12"><i class="fa-solid fa-lg fa-trash"></i></button>
                                 </form>
                             </div>
                         {% endif %}
