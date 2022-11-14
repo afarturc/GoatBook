@@ -370,3 +370,7 @@ def search(request):
         return redirect("home")
     else:
         return redirect("home")
+        redirect("home")
+
+def error404(request):
+    return render(request, '404.html')
