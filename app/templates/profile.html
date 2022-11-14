@@ -5,6 +5,8 @@
 {% comment %} <p>Profile {{ user_posts.username }}</p>
 <p>Profile {{ user.username }}</p> {% endcomment %}
 
+
+
 {% if user_posts.username != user.username %}
     <div class="card-actions justify-end">
         <button class="btn btn-outline btn-error btn-like btn-lg" value="{{ post.id }}" id="btn_{{ post.id }}">

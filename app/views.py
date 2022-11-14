@@ -324,3 +324,20 @@ def like(request):
             post.add_like(user)
             result = post.like_count
         return JsonResponse({'result': result, 'type': type})
+
+def search(request):
+    if request.method == "POST":
+        search = request.POST.get("search")
+        users = Utilizador.objects.filter(username__icontains=search)
+        posts = Post.objects.filter(caption__icontains=search)
+        ctx = {
+            "users": users,
+            "posts": posts,
+            "user": Utilizador.objects.get(username=request.user.username),
+        }
+        print(users)
+        if users:
+            return  redirect("profileUtilizador", users[0])
+        if not users and not posts:
+            return redirect("home")
+        redirect("home")

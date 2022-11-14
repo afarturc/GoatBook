@@ -39,6 +39,7 @@ urlpatterns = [
     path("post/<int:_id>/delete/", views.postdelete, name="deletepost"),
     path("post/<int:_id>/edit/", views.postedit, name="edit"),
     path("like/", views.like, name="like_post"),
+    path("search/", views.search, name="search"),
     # path("follow/", views.follow, name="follow"),
     
 
