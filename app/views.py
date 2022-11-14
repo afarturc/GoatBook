@@ -366,5 +366,9 @@ def search(request):
             return redirect("home")
         redirect("home")
 
-def error404(request):
+
+def search_result(request):
+    return render(request, "searchresult.html")
+
+def error404(request, exception):
     return render(request, '404.html')

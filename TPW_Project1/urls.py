@@ -42,7 +42,7 @@ urlpatterns = [
     path("search/", views.search, name="search"),
     path("follow/", views.follow, name="follow"),
     path("404/", views.error404, name="error404"),
-
+    path("result/", views.search_result, name="searchresult"),
     path("post/<int:_id>/comment/<int:_id_comment>/delete/", views.commentdelete, name="deletecomment"),
 
 
