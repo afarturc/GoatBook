@@ -15,7 +15,8 @@ def home(request):
             "posts": Post.objects.all().order_by("-date"),
             "user": get_object_or_404(Utilizador, username=request.user.username),
             "new_users": Utilizador.objects.all()[:5], #ALterar ainda
-            "form_search": SearchForm()
+            "form_search": SearchForm(),
+            "exist": True
         }
 
         return render(request, "home.html", ctx)
@@ -24,7 +25,8 @@ def home(request):
             "friend": False,
             "posts": Post.objects.all().order_by("-date"),
             "comments_count": Comment.objects.all().count(),
-            "form_search": SearchForm()
+            "form_search": SearchForm(),
+            "exist": False
         }
         return render(request, "home.html", ctx)
 

@@ -43,6 +43,8 @@ urlpatterns = [
     path("follow/", views.follow, name="follow"),
     path("result/", views.search_result, name="searchresult"),
     path("post/<int:_id>/comment/<int:_id_comment>/delete/", views.commentdelete, name="deletecomment"),
+    path("404/", views.error404, name="error404"),
+    path("500/", views.error500, name="error500"),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
