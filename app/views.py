@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
-from app.models import Post, Utilizador, Comment, Follow
+from app.models import Post, Utilizador, Comment
 from app.forms import FormSingup, FormLogin, CommentForm, ImageForm, PasswordForm, BioForm, EditPostForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
@@ -163,8 +163,8 @@ def profile(request):
             "user": user,
             "user_posts": user,
             "posts": posts,
-            "following_count": Follow.objects.filter(user=user).count(),
-            "followers_count": Follow.objects.filter(following=user).count()
+            #"num_followers": Follow.objects.filter(followed=user).count(),
+            #"num_following": Follow.objects.filter(follower=user).count(),
         }
 
         return render(request, "profile.html", ctx)
@@ -183,9 +183,8 @@ def profileUtilizador(request,username):
         "user_posts": user_posts,
         "posts": posts,
         "user": user,
-        "is_follower": Follow.objects.filter(following=user_posts, user=user).exists(),
-        "following_count": Follow.objects.filter(user=user_posts).count(),
-        "followers_count": Follow.objects.filter(following=user_posts).count()
+        #"num_followers": Follow.objects.filter(followed=user).count(),
+        #"num_following": Follow.objects.filter(follower=user).count(),
     }
 
     return render(request, "profile.html", ctx)
@@ -260,7 +259,6 @@ def postdelete(request, _id):
             return redirect("postdetail", _id)
     else:
         return redirect("login")
-
 # *done
 def commentdelete(request,_id, _id_comment):
     post = get_object_or_404(Post, id=_id)
@@ -329,27 +327,26 @@ def like(request):
 
 def follow(request):
     if request.POST.get('action') == 'post':
-        following = ''
-        followers = ''
+        type = ''
+        result = ''
+        user_posts_id = request.POST.get('user_posts_id')
         user_id = request.POST.get('user_id')
-        user_post_id = request.POST.get('user_posts_id')
         user = get_object_or_404(Utilizador, id=user_id)
-        user_post = get_object_or_404(Utilizador, id=user_post_id)
-        
-        if Follow.objects.filter(user=user, following=user_post).exists():
-            print("unfollow")
-            Follow.objects.filter(user=user, following=user_post).delete()
-            type = 'unfollow'
-            following = Follow.objects.filter(user=user_post).count()
-            followers = Follow.objects.filter(following=user_post).count()
-        else:
-            Follow.objects.create(user=user, following=user_post)
-            type = 'follow'
-            following = Follow.objects.filter(user=user_post).count()
-            followers = Follow.objects.filter(following=user_post).count()
-        
-        return JsonResponse({'type': type, 'following': following, 'followers': followers})
+        user_post = get_object_or_404(Utilizador, id=user_posts_id)
 
+
+        if user_post.following.filter(id=user_id).exists():
+            print("unfollow")
+            user_post.remove_follow(user)
+            type = 'unfollow'
+            result = user_post.following_count
+        else:
+            print("follow")
+            type = 'follow'
+            user_post.add_follow(user)
+            result = user_post.following_count
+        return JsonResponse({'result': result, 'type': type})
+        
 def search(request):
     if request.method == "POST":
         search = request.POST.get("search")
@@ -358,10 +355,18 @@ def search(request):
         ctx = {
             "users": users,
             "posts": posts,
-            "user": Utilizador.objects.get(username=request.user.username),
         }
+        try :
+            user = Utilizador.objects.get(username=search)
+            ctx["user"] = user
+        except Utilizador.DoesNotExist:
+            return redirect("home")
+
+
         if users:
             return  redirect("profileUtilizador", users[0])
         if not users and not posts:
             return redirect("home")
-        redirect("home")
+        return redirect("home")
+    else:
+        return redirect("home")
