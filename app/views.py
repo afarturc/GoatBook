@@ -360,7 +360,6 @@ def search(request):
             "posts": posts,
             "user": Utilizador.objects.get(username=request.user.username),
         }
-        print(users)
         if users:
             return  redirect("profileUtilizador", users[0])
         if not users and not posts:
