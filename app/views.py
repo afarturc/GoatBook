@@ -306,7 +306,7 @@ def postedit(request,_id):
     else:
         return redirect("login")
 
-
+# *Done
 def like(request):
     if request.POST.get('action') == 'post':
         type = ''
@@ -323,4 +323,26 @@ def like(request):
             type = 'like'
             post.add_like(user)
             result = post.like_count
+        return JsonResponse({'result': result, 'type': type})
+
+def follow(request):
+    if request.POST.get('action') == 'post':
+        type = ''
+        result = ''
+        user_posts_id = request.POST.get('user_posts_id')
+        user_id = request.POST.get('user_id')
+        user = get_object_or_404(Utilizador, id=user_id)
+        user_post = get_object_or_404(Utilizador, id=user_posts_id)
+
+
+        if user_post.following.filter(id=user_id).exists():
+            print("unfollow")
+            user_post.remove_follow(user)
+            type = 'unfollow'
+            result = user_post.following_count
+        else:
+            print("follow")
+            type = 'follow'
+            user_post.add_follow(user)
+            result = user_post.following_count
         return JsonResponse({'result': result, 'type': type})

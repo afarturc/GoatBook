@@ -2,17 +2,20 @@
 
 {% block content %}
 
-{% comment %} <p>Profile {{ user_posts.username }}</p>
-<p>Profile {{ user.username }}</p> {% endcomment %}
+{% comment %}
+<p>Profile {{ user_posts.username }}</p>
+<p>Profile {{ user.username }}</p> 
+{% endcomment %}
 
 {% if user_posts.username != user.username %}
     <div class="card-actions justify-end">
-        <button class="btn btn-outline btn-error btn-like btn-lg" value="{{ post.id }}" id="btn_{{ post.id }}">
-            {% if user in post.likes.all %}
+        <button class="btn btn-outline btn-error btn-follow w-24" value="{{ user_posts.id }}" id="btn_{{ user_posts.id }}">
+            {% if user in user_posts.following.all  %}
                 <i class="fa-solid fa-heart fa-lg"></i>
             {% else %}
                 <i class="fa-regular fa-heart fa-lg"></i>
             {% endif %}
+            <span id="count_{{ user_posts.id }}" class="pl-2">{{ user_posts.following_count }}</span>
         </button>
     </div>
 {% endif %}
@@ -79,4 +82,33 @@
         });
     });
 </script>
+
+<script>
+    $(document).on('click', '.btn-follow', function (e) {
+        e.preventDefault();
+        var user_posts_id = $(this).val();
+
+        $.ajax({
+            url: '{% url "follow" %}',
+            type: 'POST',
+            data: {
+                'user_id': {{ user.id }},
+                'user_posts_id': user_posts_id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'action': 'post'
+            },
+            success: function (json) {
+                if (json['type'] == 'follow') {
+                    var button = document.getElementById('btn_' + user_posts_id);
+                    button.innerHTML = '<i class="fa-solid fa-heart fa-lg"></i><span class="pl-2">' + json['result'] + '</span>';
+                } else {
+                    var button = document.getElementById('btn_' + user_posts_id);
+                    button.innerHTML = '<i class="fa-regular fa-heart fa-lg"></i><span class="pl-2">' + json['result'] + '</span>';
+                }
+                console.log(json)
+            }
+        });
+    });
+</script>
+
 {% endblock %}

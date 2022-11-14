@@ -21,7 +21,7 @@ class Utilizador (models.Model):
         self.password = password
 
     def remove_follow(self, user):
-        self.following.remove(user)    
+        self.following.remove(user)  
         self.following_count -= 1
         super().save()
 
