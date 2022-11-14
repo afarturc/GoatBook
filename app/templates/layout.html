@@ -11,6 +11,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/97a6e4f33c.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- JQueryUI -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 
 <body class="flex flex-col min-h-screen">
@@ -19,6 +23,12 @@
 <div class="navbar bg-base-100 drop-shadow-md mb-2">
     <div class="flex-1">
         <a href="/" class="btn btn-ghost normal-case text-3xl">🐐 Book</a>
+    </div>
+    <div class="mx-auto">
+        <form action="{% url 'search' %}" method="POST">
+        {% csrf_token %}
+            <input type="text" placeholder="Search" class="input input-bordered w-full" name="search" id="search"/>
+        </form>
     </div>
     {% if user.username != "admin" and user.username %}
         <div class="flex-none">
@@ -49,9 +59,13 @@
             </ul>
         </div>
     {% else %}
-        <div class="flex-none">
-            <a href="{% url 'login' %}" class="btn btn-ghost normal-case text-3xl">Login</a>
-        </div>
+        {% if request.path != "/login/" and request.path != "/signup/" %}
+            <div class="flex-none">
+                <a href="{% url 'login' %}" class="btn btn-ghost normal-case text-3xl">
+                    Login
+                </a>
+            </div>
+        {% endif %}
     {% endif %}
     </div>
 </div>
@@ -67,5 +81,4 @@
 </footer>
 {% include "modal.html" %}
 </body>
-
 </html>

@@ -115,10 +115,3 @@ class BioForm(forms.Form):
             "id": "bio",
             "name": "bio",
     }))
-
-
-
-
-
-
-
