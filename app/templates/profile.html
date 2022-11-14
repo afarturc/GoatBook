@@ -17,6 +17,7 @@
                         <p class="text-lg">{{ user_posts.bio }}</p>
                     </div>
                 </div>
+            {% if user %}
                 {% if user != user_posts%}
                     <button class="btn btn-outline btn-primary btn-follow w-24" value="{{ user_posts.id }}" id="btn_follow">
                         {% if is_follower %}
@@ -26,6 +27,13 @@
                         {% endif %}
                     </button>
                 {% endif %}
+            {% else %}
+                <a href="/login">
+                    <button class="btn btn-outline btn-primary btn-follow w-24">
+                        Follow
+                    </button>
+                </a>
+            {% endif %}
             </div>
             {% for post in posts %}
                 <div class="card w-3/4 bg-base-100 shadow-2xl mx-auto mb-4">
