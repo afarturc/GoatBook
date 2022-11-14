@@ -365,3 +365,6 @@ def search(request):
         if not users and not posts:
             return redirect("home")
         redirect("home")
+
+def error404(request):
+    return render(request, '404.html')
