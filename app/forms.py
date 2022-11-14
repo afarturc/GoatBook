@@ -115,3 +115,13 @@ class BioForm(forms.Form):
             "id": "bio",
             "name": "bio",
     }))
+
+# *** This is the form for the user to search by a username ***
+class SearchForm(forms.Form):
+    search = forms.CharField(widget=forms.TextInput(
+        attrs={
+            "class": "input input-bordered w-full",
+            "placeholder": "Search User",
+            "id": "search",
+            "name": "search",
+    }))

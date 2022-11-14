@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
 from app.models import Post, Utilizador, Comment, Follow
-from app.forms import FormSingup, FormLogin, CommentForm, ImageForm, PasswordForm, BioForm, EditPostForm
+from app.forms import FormSingup, FormLogin, CommentForm, ImageForm, PasswordForm, BioForm, EditPostForm, SearchForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 
@@ -15,6 +15,7 @@ def home(request):
             "posts": Post.objects.all().order_by("-date"),
             "user": get_object_or_404(Utilizador, username=request.user.username),
             "new_users": Utilizador.objects.all()[:5], #ALterar ainda
+            "form_search": SearchForm()
         }
 
         return render(request, "home.html", ctx)
@@ -23,6 +24,7 @@ def home(request):
             "friend": False,
             "posts": Post.objects.all().order_by("-date"),
             "comments_count": Comment.objects.all().count(),
+            "form_search": SearchForm()
         }
         return render(request, "home.html", ctx)
 
@@ -66,11 +68,11 @@ def signup(request):
                         return redirect("home")
 
                 else:
-                    return render(request, "signup.html", {"messages": "Passwords do not match.", "formSignup": formSignup})
+                    return render(request, "signup.html", {"messages": "Passwords do not match.", "formSignup": formSignup, "form_search": SearchForm()})
             else:
-                return render(request, "signup.html", {"messages": "Invalid credentials.", "formSignup": formSignup})
+                return render(request, "signup.html", {"messages": "Invalid credentials.", "formSignup": formSignup, "form_search": SearchForm()})
         else:
-            return render(request, "signup.html", {"messages": "", "formSignup": FormSingup()})
+            return render(request, "signup.html", {"messages": "", "formSignup": FormSingup(), "form_search": SearchForm()})
 
 # *Done
 def login(request):
@@ -87,11 +89,11 @@ def login(request):
                     auth.login(request, user)
                     return redirect("home")
                 else:
-                    return render(request, "login.html", {"messages": "Invalid credentials.", "formLogin": formLogin})
+                    return render(request, "login.html", {"messages": "Invalid credentials.", "formLogin": formLogin, "form_search": SearchForm()})
             else:
-                return render(request, "login.html", {"messages": "Invalid credentials.", "formLogin": formLogin})
+                return render(request, "login.html", {"messages": "Invalid credentials.", "formLogin": formLogin, "form_search": SearchForm()})
         else:
-            return render(request, "login.html", {"messages": "", "formLogin": FormLogin()})
+            return render(request, "login.html", {"messages": "", "formLogin": FormLogin(), "form_search": SearchForm()})
 
 # *Done
 def postadd(request):
@@ -116,7 +118,8 @@ def postdetail(request, _id):
     ctx = {
         "post": post,
         "comments": Comment.objects.filter(post=_id),
-        "exist_like" : False
+        "exist_like" : False,
+        "form_search": SearchForm()
     }
     post=get_object_or_404(Post, id=_id)
     if request.user.is_authenticated and request.user.username!="admin":
@@ -164,7 +167,8 @@ def profile(request):
             "user_posts": user,
             "posts": posts,
             "following_count": Follow.objects.filter(user=user).count(),
-            "followers_count": Follow.objects.filter(following=user).count()
+            "followers_count": Follow.objects.filter(following=user).count(),
+            "form_search": SearchForm()
         }
 
         return render(request, "profile.html", ctx)
@@ -185,7 +189,8 @@ def profileUtilizador(request,username):
         "user": user,
         "is_follower": Follow.objects.filter(following=user_posts, user=user).exists(),
         "following_count": Follow.objects.filter(user=user_posts).count(),
-        "followers_count": Follow.objects.filter(following=user_posts).count()
+        "followers_count": Follow.objects.filter(following=user_posts).count(),
+        "form_search": SearchForm()
     }
 
     return render(request, "profile.html", ctx)
@@ -197,7 +202,10 @@ def editProfile(request, username):
             return redirect("profile")
         sucesso = False
         utilizador = Utilizador.objects.get(username=username)
-        ctx={"user": utilizador}
+        ctx={
+            "user": utilizador,
+            "form_search": SearchForm()
+            }
 
         if request.method == "POST" and 'image' in request.FILES:
             formImage= ImageForm(request.POST, request.FILES)
@@ -283,6 +291,7 @@ def postedit(request,_id):
                 "post": post,
                 "form_postedit": EditPostForm(),
                 "user": Utilizador.objects.get(username=request.user.username),
+                "form_search": SearchForm()
             }
             if request.method == "POST":
                 form_postedit = EditPostForm(request.POST, request.FILES)
@@ -352,37 +361,46 @@ def follow(request):
 
 def search(request):
     if request.method == "POST":
-        search = request.POST.get("search")
-        if search == '':
-            print("entrou")
-        try:
-            users = Utilizador.objects.filter(username__icontains=search)
-        except ObjectDoesNotExist:
-            users = list ()
+        form_search = SearchForm(request.POST)
+        if form_search.is_valid():
+            search = form_search.cleaned_data["search"]
+            try:
+                users = Utilizador.objects.filter(username__icontains=search)
+            except ObjectDoesNotExist:
+                users = list ()
 
-        try:
-            user = Utilizador.objects.get(username=request.user.username)
-            ctx["user"]=user
-        except ObjectDoesNotExist:
-            user = None
+            try:
+                user = Utilizador.objects.get(username=request.user.username)
+                ctx["user"]=user
+            except ObjectDoesNotExist:
+                user = None
+            
+            result = []
+            for result_user in users:
+                following = Follow.objects.filter(user=result_user).count()
+                followers = Follow.objects.filter(following=result_user).count()
+                result.append((result_user,following,followers))
+
+            ctx = {
+                "result": result,
+                "user": user,
+                "form_search": form_search
+            }
+            return render(request,"searchresult.html",ctx)
         
-        result = []
-        for result_user in users:
-            following = Follow.objects.filter(user=result_user).count()
-            followers = Follow.objects.filter(following=result_user).count()
-            result.append((result_user,following,followers))
-
-        ctx = {
-            "result": result,
-            "user": user,
-        }
-        return render(request,"searchresult.html",ctx)
     else:
-        return redirect("home")
+        return redirect("searchresult")
 
 
 def search_result(request):
-    return render(request, "searchresult.html")
+    ctx={"form_search": SearchForm()}
+    try:
+        user = Utilizador.objects.get(username=request.user.username)
+        ctx["user"]=user
+    except ObjectDoesNotExist:
+        user = None
+
+    return render(request, "searchresult.html", ctx)
 
 def error404(request, exception):
     return render(request, '404.html')
