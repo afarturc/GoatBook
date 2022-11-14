@@ -406,8 +406,22 @@ def search_result(request):
     return render(request, "searchresult.html", ctx)
 
 def error404(request, exception):
+    user=None
+    if request.user.is_authenticated and request.user.username!="admin":
+        user = Utilizador.objects.get(username=request.user.username)
     ctx = {
         "form_search": SearchForm(),
-        "exception": exception
+        "exception": exception,
+        "user": user
+    }
+    return render(request, '404.html',ctx)
+
+def error500(request):
+    user=None
+    if request.user.is_authenticated and request.user.username!="admin":
+        user = Utilizador.objects.get(username=request.user.username)
+    ctx = {
+        "form_search": SearchForm(),
+        "user": user
     }
     return render(request, '404.html',ctx)
