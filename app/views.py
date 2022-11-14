@@ -176,8 +176,12 @@ def profile(request):
         return redirect("login")
 
 def profileUtilizador(request,username):
+    print(username)
     user_posts = get_object_or_404(Utilizador, username=username)
-    user = get_object_or_404(Utilizador, username=request.user.username)
+    if request.user.is_authenticated and request.user.username!="admin":
+        user = get_object_or_404(Utilizador, username=request.user.username)
+    else:
+        user = None
     try:
         posts = Post.objects.filter(user=user_posts).order_by("-date")
     except ObjectDoesNotExist:
@@ -402,4 +406,8 @@ def search_result(request):
     return render(request, "searchresult.html", ctx)
 
 def error404(request, exception):
-    return render(request, '404.html')
+    ctx = {
+        "form_search": SearchForm(),
+        "exception": exception
+    }
+    return render(request, '404.html',ctx)
