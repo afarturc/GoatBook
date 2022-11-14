@@ -353,18 +353,32 @@ def follow(request):
 def search(request):
     if request.method == "POST":
         search = request.POST.get("search")
-        users = Utilizador.objects.filter(username__icontains=search)
-        posts = Post.objects.filter(caption__icontains=search)
+        if search == '':
+            print("entrou")
+        try:
+            users = Utilizador.objects.filter(username__icontains=search)
+        except ObjectDoesNotExist:
+            users = list ()
+
+        try:
+            user = Utilizador.objects.get(username=request.user.username)
+            ctx["user"]=user
+        except ObjectDoesNotExist:
+            user = None
+        
+        result = []
+        for result_user in users:
+            following = Follow.objects.filter(user=result_user).count()
+            followers = Follow.objects.filter(following=result_user).count()
+            result.append((result_user,following,followers))
+
         ctx = {
-            "users": users,
-            "posts": posts,
-            "user": Utilizador.objects.get(username=request.user.username),
+            "result": result,
+            "user": user,
         }
-        if users:
-            return  redirect("profileUtilizador", users[0])
-        if not users and not posts:
-            return redirect("home")
-        redirect("home")
+        return render(request,"searchresult.html",ctx)
+    else:
+        return redirect("home")
 
 
 def search_result(request):
