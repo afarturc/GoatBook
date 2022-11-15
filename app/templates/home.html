@@ -10,9 +10,10 @@
                             <h2 class="card-title text-4xl">{{ post.caption }}</h2>
 
                             <div class="flex items-center justify-between">
-                                <p class="font-bold">{{ post.user.username}}</p>
+                            <div class="flex flex-row items-center">
+                                <p class="font-bold pr-2">{{ post.user.username}}</p>
                                 <small class="font-light"> {{ post.date|timesince }}</small>
-
+                            </div>
                                 <div class="card-actions justify-end">
                                     {% if exist %}
                                         <label class="btn btn-circle btn-outline btn-primary w-24">
