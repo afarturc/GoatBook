@@ -9,7 +9,6 @@ class Utilizador (models.Model):
     bio = models.CharField(max_length=256, blank=True)
     email = models.EmailField(max_length=50)
     profile_pic = models.ImageField(upload_to='profile_pics', blank=True, default= 'default.png')
-    #post_count = models.IntegerField(default=0)
 
     def update_image(self, file):
         self.profile_pic.storage.delete(self.profile_pic.name)
