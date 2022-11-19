@@ -114,6 +114,17 @@ Por fim, um problema menor encontrado durante o desenvolvimento foi como o Djang
 post. Para resolver este problema, o Django tem um template filter que permite formatar a data e hora conforme
 o que o utilizador desejar, neste caso a data relativamente ao dia atual.
 
+
+## Deploy
+
+Este projeto está disponível em: https://v1centebarros.pythonanywhere.com/ e o utilizador utilizado durante a apresentação
+tem as seguintes credenciais:
+
+
+**username**: user
+
+**password**: 123
+
 ## Outras tecnologias
 
 - [TailwindCSS](https://tailwindcss.com/)
